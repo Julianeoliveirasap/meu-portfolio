@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LATAM Account Intelligence Factory · SAP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --sap-violet:   #5b23c8;
+      --sap-indigo:   #3b1a8f;
+      --sap-magenta:  #c030c8;
+      --sap-navy:     #1a1060;
+      --sap-navy-mid: #231480;
+      --sap-purple:   #7b3fe4;
+
+      --grad-h:    linear-gradient(90deg, var(--sap-navy) 0%, var(--sap-violet) 50%, var(--sap-magenta) 100%);
+      --grad-card: linear-gradient(135deg, var(--sap-violet) 0%, var(--sap-magenta) 100%);
+
+      --bg:        #f5f4fb;
+      --bg-purple: #ede9fc;
+      --bg-card:   #ffffff;
+      --border:    #e0d9f5;
+      --shadow:    0 2px 20px rgba(91,35,200,0.07);
+      --shadow-h:  0 8px 40px rgba(91,35,200,0.15);
+
+      --text:      #1a1060;
+      --text-mid:  #4a4a7a;
+      --text-dim:  #8888aa;
+      --text-inv:  #ffffff;
+
+      --radius:    12px;
+      --radius-sm: 8px;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 15px; line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── SCROLL BAR ── */
+    #scroll-bar {
+      position: fixed; top: 0; left: 0; height: 3px; z-index: 500;
+      background: var(--grad-h);
+      width: 0%; transition: width 0.12s linear;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 400;
+      height: 68px;
+      background: rgba(255,255,255,0.96);
+      -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 2.5rem;
+      box-shadow: 0 1px 12px rgba(91,35,200,0.07);
+    }
+    .nav-left { display: flex; align-items: center; gap: 0.85rem; }
+    .sap-logo {
+      display: flex; align-items: center; flex-shrink: 0;
+    }
+    .sap-logo img { height: 60px; width: auto; display: block; }
+    .nav-divider { width: 1px; height: 18px; background: var(--border); }
+    .nav-title { font-size: 0.86rem; font-weight: 600; color: var(--text); }
+    .nav-sub   { font-size: 0.68rem; color: var(--text-dim); margin-top: 0.04rem; }
+    .nav-right { display: flex; align-items: center; gap: 1.1rem; }
+    .nav-tag   { font-size: 0.7rem; color: var(--text-dim); }
+    .nav-tag strong { color: var(--sap-violet); }
+    .nav-badge {
+      display: inline-flex; align-items: center; gap: 0.38rem;
+      background: linear-gradient(90deg, var(--sap-violet), var(--sap-magenta));
+      color: #fff; border-radius: 4px;
+      padding: 0.22rem 0.7rem; font-size: 0.7rem; font-weight: 600;
+      letter-spacing: 0.04em;
+    }
+    .live-dot {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: #5ee36a; box-shadow: 0 0 5px rgba(94,227,106,0.7);
+    }
+
+    /* ── HERO ── */
+    .hero {
+      background: var(--grad-h);
+      padding: 5.5rem 2.5rem 4.5rem;
+      position: relative; overflow: hidden;
+      min-height: 52vh; display: flex; align-items: center;
+    }
+    .hero-geo { position: absolute; pointer-events: none; }
+    .hero-geo.a {
+      right: 6%; top: 10%;
+      width: 320px; height: 320px; border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .hero-geo.b {
+      right: 16%; bottom: 8%;
+      width: 140px; height: 140px; border-radius: 50%;
+      background: rgba(255,255,255,0.03);
+    }
+    .hero-geo.c {
+      right: 4%; bottom: 22%;
+      width: 1px; height: 90px;
+      background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.14), transparent);
+    }
+    .hero-geo.d {
+      right: 28%; top: 20%;
+      font-size: 1.4rem; color: rgba(255,255,255,0.07);
+      content: '✦';
+    }
+
+    .hero-inner { max-width: 720px; position: relative; z-index: 1; }
+    .hero-breadcrumb {
+      display: flex; align-items: center; gap: 0.5rem;
+      font-size: 0.67rem; color: rgba(255,255,255,0.45);
+      margin-bottom: 1.2rem;
+      opacity: 0; animation: fade-up 0.55s 0.1s forwards;
+    }
+    .hero-breadcrumb span { color: rgba(255,255,255,0.25); }
+    .hero-breadcrumb strong { color: rgba(255,255,255,0.65); }
+
+    .hero h1 {
+      font-size: clamp(1.9rem, 4vw, 3.4rem);
+      font-weight: 700; letter-spacing: -0.025em; line-height: 1.08;
+      color: #fff; margin-bottom: 1rem;
+      opacity: 0; animation: fade-up 0.55s 0.22s forwards;
+    }
+    .hero-sub {
+      font-size: 1rem; color: rgba(255,255,255,0.7);
+      max-width: 560px; line-height: 1.75; margin-bottom: 2rem;
+      opacity: 0; animation: fade-up 0.55s 0.36s forwards;
+    }
+    .hero-meta {
+      display: flex; flex-wrap: wrap; gap: 0.5rem;
+      opacity: 0; animation: fade-up 0.55s 0.5s forwards;
+    }
+    .hero-chip {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 4px; padding: 0.26rem 0.72rem;
+      font-size: 0.72rem; font-weight: 500; color: rgba(255,255,255,0.82);
+    }
+    .hero-chip.hi {
+      background: rgba(255,255,255,0.2); border-color: rgba(255,255,255,0.32);
+      color: #fff; font-weight: 600;
+    }
+
+    @keyframes fade-up {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── CHALLENGE ── */
+    .section-wrap { padding: 4rem 2.5rem; }
+    .section-wrap.white  { background: var(--bg-card); border-bottom: 1px solid var(--border); }
+    .section-wrap.gray   { background: var(--bg); }
+    .section-wrap.purple { background: var(--bg-purple); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+
+    .container { max-width: 1060px; margin: 0 auto; }
+
+    .eyebrow {
+      font-size: 0.62rem; font-weight: 700; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--sap-violet); margin-bottom: 0.5rem;
+    }
+    .eyebrow.inv { color: rgba(255,255,255,0.45); }
+
+    .sec-title {
+      font-size: clamp(1.5rem, 2.8vw, 2.2rem);
+      font-weight: 700; color: var(--text);
+      letter-spacing: -0.02em; line-height: 1.15; margin-bottom: 0.5rem;
+    }
+    .sec-title.inv { color: #fff; }
+
+    .sec-intro { font-size: 0.92rem; color: var(--text-mid); line-height: 1.75; max-width: 580px; }
+    .sec-intro.inv { color: rgba(255,255,255,0.6); }
+    .tl-intro { max-width: 500px; margin: 0 auto; }
+
+    .challenge-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 3rem;
+      align-items: start; margin-top: 2.5rem;
+    }
+    .context-card {
+      background: #f0ebff; border: 1px solid rgba(91,35,200,0.15);
+      border-left: 3px solid var(--sap-violet);
+      border-radius: var(--radius); padding: 1.4rem 1.6rem;
+      font-size: 0.9rem; color: var(--text-mid); line-height: 1.7;
+    }
+    .context-card strong { color: var(--sap-violet); }
+
+    .pain-list { display: flex; flex-direction: column; gap: 0.6rem; }
+    .pain-item {
+      display: flex; align-items: flex-start; gap: 0.85rem;
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 0.85rem 1.1rem;
+      font-size: 0.84rem; color: var(--text-mid); line-height: 1.5;
+      box-shadow: var(--shadow);
+    }
+    .pain-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--sap-magenta); flex-shrink: 0; margin-top: 0.38rem;
+    }
+
+    /* ── VISION ── */
+    .vision-wrap {
+      background: var(--sap-violet);
+      padding: 3rem 2.5rem; text-align: center;
+    }
+    .vision-inner { max-width: 720px; margin: 0 auto; }
+    .vision-label {
+      font-size: 0.62rem; font-weight: 700; letter-spacing: 0.18em;
+      text-transform: uppercase; color: rgba(255,255,255,0.5);
+      margin-bottom: 0.9rem;
+    }
+    .vision-text { font-size: 1.05rem; color: rgba(255,255,255,0.88); line-height: 1.8; }
+    .vision-text strong { color: #fff; }
+
+    /* ── TIMELINE ── */
+    .tl-header { text-align: center; margin-bottom: 4.5rem; }
+
+    .tl-wrap { position: relative; }
+    .tl-wrap::before {
+      content: '';
+      position: absolute; left: 50%; top: 0; bottom: 0;
+      width: 2px; transform: translateX(-50%);
+      background: linear-gradient(
+        to bottom,
+        transparent,
+        var(--sap-violet) 6%,
+        var(--sap-violet) 94%,
+        transparent
+      );
+      opacity: 0.2;
+    }
+
+    .tl-row {
+      display: grid;
+      grid-template-columns: 1fr 80px 1fr;
+      margin-bottom: 4.5rem;
+    }
+    .tl-row:last-child { margin-bottom: 0; }
+
+    .tl-l { grid-column: 1; display: flex; justify-content: flex-end; padding-right: 2.5rem; align-items: center; }
+    .tl-c { grid-column: 2; display: flex; flex-direction: column; align-items: center; position: relative; z-index: 2; }
+    .tl-r { grid-column: 3; display: flex; justify-content: flex-start; padding-left: 2.5rem; align-items: center; }
+
+    .tl-row.even .tl-l { grid-column: 1; justify-content: flex-end; padding-right: 2.5rem; padding-left: 0; }
+    .tl-row.even .tl-c { grid-column: 2; }
+    .tl-row.even .tl-r { grid-column: 3; justify-content: flex-start; padding-left: 2.5rem; padding-right: 0; }
+
+    /* ── DOT ── */
+    .tl-dot {
+      width: 52px; height: 52px; border-radius: 50%;
+      background: var(--bg-card); border: 2px solid var(--border);
+      box-shadow: var(--shadow);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; position: relative;
+      transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s, background 0.3s;
+    }
+    .tl-dot-ico {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: #f0ebff;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.3s;
+    }
+    .tl-dot-ico svg { width: 16px; height: 16px; fill: var(--sap-violet); transition: fill 0.3s; }
+
+    .tl-row:hover .tl-dot {
+      border-color: var(--sap-violet);
+      box-shadow: 0 0 0 6px rgba(91,35,200,0.1), var(--shadow-h);
+      transform: scale(1.08);
+    }
+    .tl-row:hover .tl-dot-ico { background: var(--sap-violet); }
+    .tl-row:hover .tl-dot-ico svg { fill: #fff; }
+
+    /* ── CARD ── */
+    .tl-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.6rem 1.85rem;
+      width: 100%; max-width: 400px;
+      box-shadow: var(--shadow);
+      position: relative; overflow: hidden;
+      transition: box-shadow 0.3s, border-color 0.3s, transform 0.3s;
+      cursor: default;
+    }
+    .tl-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: var(--grad-h); opacity: 0; transition: opacity 0.3s;
+    }
+    .tl-row:hover .tl-card {
+      box-shadow: var(--shadow-h);
+      border-color: rgba(91,35,200,0.25);
+      transform: translateY(-3px);
+    }
+    .tl-row:hover .tl-card::before { opacity: 1; }
+
+    .tl-card-header { display: flex; align-items: center; gap: 0.65rem; margin-bottom: 0.8rem; }
+    .tl-stage-num {
+      font-size: 0.6rem; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--text-dim);
+    }
+    .tl-stage-name {
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--sap-violet);
+    }
+    .tl-card-title {
+      font-size: 1rem; font-weight: 700; color: var(--text);
+      letter-spacing: -0.01em; line-height: 1.35;
+    }
+
+    .tl-output {
+      display: inline-flex; align-items: center; gap: 0.45rem;
+      margin-top: 0.9rem;
+      background: #f0ebff; border: 1px solid rgba(91,35,200,0.18);
+      border-radius: 4px; padding: 0.3rem 0.75rem;
+      font-size: 0.73rem; font-weight: 600; color: var(--sap-violet);
+    }
+
+    /* ── DETAILS ── */
+    .tl-details {
+      max-height: 0; opacity: 0; overflow: hidden;
+      transition: max-height 0.5s cubic-bezier(0.4,0,0.2,1), opacity 0.38s ease, margin-top 0.35s;
+      margin-top: 0;
+    }
+    .tl-row:hover .tl-details { max-height: 600px; opacity: 1; margin-top: 1.2rem; }
+
+    .tl-sep { height: 1px; background: var(--border); margin-bottom: 1rem; }
+
+    .tl-purpose {
+      font-size: 0.83rem; color: var(--text-mid); line-height: 1.65;
+      background: #f0ebff; border-radius: var(--radius-sm);
+      padding: 0.7rem 0.9rem; margin-bottom: 1rem;
+    }
+    .tl-purpose strong { color: var(--sap-violet); }
+
+    .tl-acts-lbl {
+      font-size: 0.6rem; font-weight: 700; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--text-dim); margin-bottom: 0.5rem;
+    }
+    .tl-acts { display: flex; flex-direction: column; gap: 0.35rem; margin-bottom: 1rem; }
+    .tl-act {
+      display: flex; align-items: flex-start; gap: 0.6rem;
+      font-size: 0.82rem; color: var(--text-mid); line-height: 1.5;
+    }
+    .tl-act-bullet {
+      width: 4px; height: 4px; border-radius: 50%;
+      background: var(--sap-violet); flex-shrink: 0; margin-top: 0.52rem;
+    }
+
+    .tl-tags { display: flex; flex-wrap: wrap; gap: 0.38rem; }
+    .tl-tag {
+      background: #f0ebff; border: 1px solid rgba(91,35,200,0.16);
+      border-radius: 4px; padding: 0.2rem 0.58rem;
+      font-size: 0.7rem; font-weight: 500; color: var(--sap-violet);
+    }
+
+    /* ── CONNECTOR ── */
+    .tl-conn { display: flex; align-items: center; gap: 0.6rem; width: 100%; }
+    .tl-conn-line { flex: 1; height: 1px; background: var(--border); transition: background 0.3s; }
+    .tl-conn-badge {
+      font-size: 0.6rem; font-weight: 600; letter-spacing: 0.1em;
+      text-transform: uppercase; white-space: nowrap;
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 4px; padding: 0.22rem 0.62rem;
+      color: var(--text-dim);
+      transition: color 0.3s, border-color 0.3s, background 0.3s;
+    }
+    .tl-row:hover .tl-conn-badge {
+      color: var(--sap-violet); border-color: rgba(91,35,200,0.28); background: #f0ebff;
+    }
+    .tl-row:hover .tl-conn-line { background: rgba(91,35,200,0.22); }
+
+    /* ── IMPACT ── */
+    .impact-header { text-align: center; margin-bottom: 2.5rem; }
+    .impact-grid {
+      display: grid; grid-template-columns: repeat(3,1fr); gap: 1rem; margin-bottom: 2rem;
+    }
+    .impact-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1.5rem 1.6rem;
+      transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
+      position: relative; overflow: hidden;
+    }
+    .impact-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--sap-violet), var(--sap-magenta));
+      opacity: 0; transition: opacity 0.25s;
+    }
+    .impact-card:hover {
+      border-color: rgba(91,35,200,0.3);
+      box-shadow: var(--shadow-h);
+      transform: translateY(-2px);
+    }
+    .impact-card:hover::before { opacity: 1; }
+    /* Highlighted card — solid violet */
+    .impact-card.hi {
+      background: var(--grad-card); border-color: transparent;
+    }
+    .impact-card.hi::before { display: none; }
+    .impact-card.hi:hover { opacity: 0.94; transform: translateY(-2px); box-shadow: var(--shadow-h); }
+    .impact-ico {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: var(--bg-purple);
+      display: flex; align-items: center; justify-content: center; margin-bottom: 0.85rem;
+    }
+    .impact-ico svg { width: 20px; height: 20px; fill: var(--sap-violet); }
+    .impact-card.hi .impact-ico { background: rgba(255,255,255,0.18); }
+    .impact-card.hi .impact-ico svg { fill: #fff; }
+    .impact-title { font-size: 0.92rem; font-weight: 700; color: var(--text); margin-bottom: 0.4rem; }
+    .impact-body  { font-size: 0.81rem; color: var(--text-mid); line-height: 1.65; }
+    .impact-card.hi .impact-title { color: #fff; }
+    .impact-card.hi .impact-body  { color: rgba(255,255,255,0.78); }
+
+    .outcome-row {
+      background: var(--bg-purple); border: 1px solid var(--border);
+      border-left: 3px solid var(--sap-violet);
+      border-radius: var(--radius); padding: 1.25rem 1.75rem;
+      display: flex; align-items: center; gap: 1.25rem;
+    }
+    .outcome-ico {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: var(--sap-violet); flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .outcome-ico svg { width: 22px; height: 22px; fill: #fff; }
+    .outcome-text { font-size: 0.9rem; color: var(--text-mid); line-height: 1.6; }
+    .outcome-text strong { color: var(--text); }
+
+    /* ── TECH ── */
+    .tech-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; margin-top: 2rem; }
+    .tech-group-title {
+      font-size: 0.62rem; font-weight: 700; letter-spacing: 0.16em;
+      text-transform: uppercase; color: var(--sap-violet); margin-bottom: 0.85rem;
+    }
+    .tech-pills { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+    .tech-pill {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      border-radius: 4px; padding: 0.32rem 0.75rem;
+      font-size: 0.75rem; font-weight: 500;
+    }
+    .tech-pill.new { background: #f0ebff; border: 1px solid rgba(91,35,200,0.2); color: var(--sap-violet); }
+    .tech-pill.cur { background: var(--bg); border: 1px solid var(--border); color: var(--text-mid); }
+    .tech-dot { width: 5px; height: 5px; border-radius: 50%; }
+    .tech-pill.new .tech-dot { background: var(--sap-violet); }
+    .tech-pill.cur .tech-dot { background: var(--text-dim); }
+
+    /* ── FUTURE INNOVATION ── */
+    .future-header { margin-bottom: 3.5rem; }
+    .future-header .sec-intro { max-width: 720px; }
+
+    .future-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;
+    }
+    .future-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2rem 2rem 1.75rem;
+      display: flex; flex-direction: column; gap: 0.85rem;
+      box-shadow: var(--shadow);
+      position: relative; overflow: hidden;
+      transition: box-shadow 0.3s, border-color 0.3s, transform 0.3s;
+    }
+    .future-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: var(--grad-h);
+    }
+    .future-card:hover {
+      box-shadow: var(--shadow-h);
+      border-color: rgba(91,35,200,0.25);
+      transform: translateY(-3px);
+    }
+
+    .future-card-top {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      margin-bottom: 0.25rem;
+    }
+    .future-num {
+      font-size: 2.4rem; font-weight: 800; line-height: 1;
+      color: var(--bg-purple); letter-spacing: -0.04em;
+      -webkit-user-select: none; user-select: none;
+    }
+    .future-icon {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: var(--bg-purple);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .future-icon svg { width: 20px; height: 20px; fill: var(--sap-violet); }
+
+    .future-tag {
+      font-size: 0.78rem; font-weight: 700; color: var(--sap-violet);
+      letter-spacing: -0.01em; line-height: 1.3;
+    }
+    .future-body {
+      font-size: 0.84rem; color: var(--text-mid); line-height: 1.72;
+    }
+    .future-value {
+      margin-top: auto;
+      background: var(--bg-purple); border-radius: var(--radius-sm);
+      padding: 0.85rem 1rem;
+    }
+    .future-value-label {
+      display: block;
+      font-size: 0.6rem; font-weight: 700; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--sap-violet);
+      margin-bottom: 0.35rem;
+    }
+    .future-value-text {
+      font-size: 0.8rem; color: var(--text-mid); line-height: 1.6;
+    }
+
+    @media (max-width: 900px) {
+      .future-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--bg-card); border-top: 1px solid var(--border);
+      padding: 1.75rem 2.5rem;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .footer-left { display: flex; align-items: center; gap: 0.75rem; }
+    .footer-text { font-size: 0.82rem; color: var(--text-mid); }
+    .footer-text strong { color: var(--text); }
+    .footer-right { font-size: 0.68rem; color: var(--text-dim); letter-spacing: 0.04em; }
+    .footer-right strong { color: var(--text); }
+    .footer-logo {
+      display: flex; align-items: center; flex-shrink: 0;
+    }
+    .footer-logo img { height: 50px; width: auto; display: block; }
+
+    /* ── FADE IN ── */
+    .fade-in { opacity:0; transform:translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .fade-in.visible { opacity:1; transform:translateY(0); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 820px) {
+      nav { padding: 0 1rem; }
+      .nav-right { display: none; }
+      .challenge-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+      .tl-wrap::before { left: 26px; transform: none; }
+      .tl-row { grid-template-columns: 52px 1fr; margin-bottom: 2.5rem; }
+      .tl-l { display: none; }
+      .tl-c { grid-column: 1; }
+      .tl-r { grid-column: 2; padding-left: 1.1rem; }
+      .tl-row.even .tl-l { display: none; }
+      .tl-row.even .tl-c { grid-column: 1; }
+      .tl-row.even .tl-r { grid-column: 2; padding-left: 1.1rem; }
+      .tl-card { max-width: 100%; }
+      .impact-grid { grid-template-columns: 1fr 1fr; }
+      .tech-cols { grid-template-columns: 1fr; gap: 2rem; }
+      footer { flex-direction: column; gap: 0.75rem; text-align: center; }
+    }
+    @media (max-width: 520px) {
+      .impact-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="scroll-bar"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-left">
+    <div class="sap-logo"><img src="sap-logo.png" alt="SAP" /></div>
+    <div class="nav-divider"></div>
+    <div>
+      <div class="nav-title">Account Intelligence Factory</div>
+      <div class="nav-sub">SAP LATAM · Customer Data Intelligence</div>
+    </div>
+  </div>
+  <div class="nav-right">
+    <div class="nav-tag"><strong>6</strong> Stages &nbsp;·&nbsp; <strong>5</strong> Countries</div>
+    <div class="nav-badge"><span class="live-dot"></span>Live Initiative</div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-geo a"></div>
+  <div class="hero-geo b"></div>
+  <div class="hero-geo c"></div>
+  <div class="hero-inner">
+    <div class="hero-breadcrumb">SAP LATAM <span>›</span> Customer Data Intelligence <span>›</span> <strong>Account Intelligence Factory</strong></div>
+    <h1>LATAM Account<br/>Intelligence Factory</h1>
+    <p class="hero-sub">Transforming Data into Pipeline. A scalable production line that continuously discovers, validates, enriches, and prioritizes accounts across Latin America.</p>
+    <div class="hero-meta">
+      <span class="hero-chip hi">Transforming Data into Pipeline</span>
+      <span class="hero-chip">166k+ Corporate Accounts</span>
+      <span class="hero-chip">BR · CL · AR · PE · CO</span>
+      <span class="hero-chip">SAP BTP · Databricks</span>
+    </div>
+  </div>
+</div>
+
+<!-- THE CHALLENGE -->
+<div class="section-wrap white">
+  <div class="container fade-in">
+    <div class="eyebrow">The Challenge</div>
+    <h2 class="sec-title">Structural issues impacting pipeline growth</h2>
+    <div class="challenge-grid">
+      <div>
+        <div class="context-card">
+          SAP LATAM manages more than <strong>166,000 corporate accounts</strong> across multiple countries and systems. Despite significant efforts in data cleansing and account creation, structural challenges continue to affect sales and marketing — causing teams to operate with incomplete, outdated, or inconsistent information that directly impacts segmentation, campaign effectiveness, and pipeline generation.
+        </div>
+      </div>
+      <ul class="pain-list">
+        <li class="pain-item"><span class="pain-dot"></span>Inconsistent company classifications, revenue figures, and account ownership</li>
+        <li class="pain-item"><span class="pain-dot"></span>Dependence on external providers with incomplete market coverage</li>
+        <li class="pain-item"><span class="pain-dot"></span>Missing unique identifiers causing duplicate and inaccurate records</li>
+        <li class="pain-item"><span class="pain-dot"></span>Manual and slow account creation processes</li>
+        <li class="pain-item"><span class="pain-dot"></span>No unified criteria across regions — decisions vary by analyst</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- VISION -->
+<div class="vision-wrap fade-in">
+  <div class="vision-inner">
+    <div class="vision-label">Strategic Vision</div>
+    <p class="vision-text">Move from a reactive Data Management model to an <strong>industrialized Account Intelligence Factory</strong> — a scalable data production line that transforms raw market information into <strong>sales-ready intelligence</strong> across Latin America.</p>
+  </div>
+</div>
+
+<!-- TIMELINE -->
+<div class="section-wrap gray">
+  <div class="container">
+    <div class="tl-header fade-in">
+      <div class="eyebrow">The Account Intelligence Factory</div>
+      <h2 class="sec-title">6-Stage Production Line</h2>
+      <p class="sec-intro tl-intro">Hover over each stage to explore its purpose, activities, and expected output.</p>
+    </div>
+
+    <div class="tl-wrap">
+
+      <!-- S1 — Discovery — RIGHT -->
+      <div class="tl-row odd fade-in">
+        <div class="tl-l">
+          <div class="tl-conn">
+            <div class="tl-conn-line"></div>
+            <div class="tl-conn-badge">New Sources</div>
+            <div class="tl-conn-line"></div>
+          </div>
+        </div>
+        <div class="tl-c">
+          <div class="tl-dot">
+            <div class="tl-dot-ico">
+              <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+            </div>
+          </div>
+        </div>
+        <div class="tl-r">
+          <div class="tl-card">
+            <div class="tl-card-header">
+              <span class="tl-stage-num">Stage 01</span>
+              <span class="tl-stage-name">Discovery</span>
+            </div>
+            <div class="tl-card-title">Find new companies and market opportunities</div>
+            <div class="tl-output">→ Net-New Accounts</div>
+            <div class="tl-details">
+              <div class="tl-sep"></div>
+              <div class="tl-purpose"><strong>Purpose:</strong> Identify companies not currently in the CRM and uncover new market opportunities across LATAM.</div>
+              <div class="tl-acts-lbl">Activities</div>
+              <div class="tl-acts">
+                <div class="tl-act"><span class="tl-act-bullet"></span>Search government databases and commercial providers</div>
+                <div class="tl-act"><span class="tl-act-bullet"></span>Detect net-new accounts not yet in CRM</div>
+                <div class="tl-act"><span class="tl-act-bullet"></span>Expand market coverage across all LATAM countries</div>
+                <div class="tl-act"><span class="tl-act-bullet"></span>Identify companies matching SAP target profiles</div>
+              </div>
+              <div class="tl-tags">
+                <span class="tl-tag">Government APIs</span>
+                <span class="tl-tag">Chambers of Commerce</span>
+                <span class="tl-tag">Market Intelligence</span>
+                <span class="tl-tag">SearchAPI</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- S2 — Validation — LEFT -->
+      <div class="tl-row even fade-in">
+        <div class="tl-l">
+          <div class="tl-card">
+            <div class="tl-card-header">
+              <span class="tl-stage-num">Stage 02</span>
+              <span class="tl-stage-name">Validation</span>
+            </div>
+            <div class="tl-card-title">Verify accuracy and trustworthiness</div>
+            <div class="tl-output">→ Trusted &amp; Verified Accounts</div>
+            <div class="tl-details">
+              <div class="tl-sep"></div>
+              <div class="tl-purpose"><strong>Purpose:</strong> Verify that company information is accurate, active, and trustworthy before entering or updating the CRM.</div>
+              <div class="tl-acts-lbl">Activities</div>
+              <div class="tl-acts">
+                <div class="tl-act"><span class="tl-act-bullet"></span>Validate Tax ID and legal status</div>
+                <div class="tl-act"><span class="tl-act-bullet"></span>Confirm company activity and operating status</div>
+                <div class="tl-act"><span class="tl-act-bullet"></span>Verify addresses, websites, and corporate hierarchy</div>
+                <div class="tl-act"><span class="tl-act-bullet"></span>Detect duplicates and data inconsistencies</div>
+                <div class="tl-act"><span class="tl-act-bullet"></span>Continuous account monitoring &amp; change detection</div>
+              </div>
+              <div class="tl-tags">
+                <span class="tl-tag">Tax ID · CNPJ</span>
+                <span class="tl-tag">Receita Federal</span>
+                <span class="tl-tag">AFIP · SUNAT · SII</span>
+                <span class="tl-tag">Legal Status</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="tl-c">
+          <div class="tl-dot">
+            <div class="tl-dot-ico">
+              <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+            </div>
+          </div>
+        </div>
+        <div class="tl-r">
+          <div class="tl-conn">
+            <div class="tl-conn-line"></div>
+            <div class="tl-conn-badge">CRM Governance</div>
+            <div class="tl-conn-line"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- S3 — Enrichment — RIGHT -->
+      <div class="tl-row odd fade-in">
+        <div class="tl-l">
+          <div class="tl-conn">
+            <div class="tl-conn-line"></div>
+            <div class="tl-conn-badge">360° Profiles</div>
+            <div class="tl-conn-line"></div>
+          </div>
+        </div>
+        <div class="tl-c">
+          <div class="tl-dot">
+            <div class="tl-dot-ico">
+              <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/></svg>
+            </div>
+          </div>
+        </div>
+        <div class="tl-r">
+          <div class="tl-card">
+            <div class="tl-card-header">
+              <span class="tl-stage-num">Stage 03</span>
+              <span class="tl-stage-name">Enrichment</span>
+            </div>
+            <div class="tl-card-title">Add business intelligence and context</div>
+            <div class="tl-output">→ 360° Company Profiles</div>
+            <div class="tl-details">
+              <div class="tl-sep"></div>
+              <div class="tl-purpose"><strong>Purpose:</strong> Enhance company records with additional business intelligence to improve segmentation and targeting.</div>
+              <div class="tl-acts-lbl">Activities</div>
+              <div class="tl-acts">
+                <div class="tl-act"><span class="tl-act-bullet"></span>Add firmographic information (revenue, employees, industry)</div>
+                <div class="tl-act"><span class="tl-act-bullet"></span>Validate websites and corporate hierarchy</div>
+                <div class="tl-act"><span class="tl-act-bullet"></span>Identify technologies and competitive landscape</div>
+                <div class="tl-act"><span class="tl-act-bullet"></span>Capture business news and growth signals</div>
+              </div>
+              <div class="tl-tags">
+                <span class="tl-tag">Firmographics</span>
+                <span class="tl-tag">Tech Intelligence</span>
+                <span class="tl-tag">News &amp; Signals</span>
+                <span class="tl-tag">Moodys · D&amp;B</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- S4 — Executive Profiling — LEFT -->
+      <div class="tl-row even fade-in">
+        <div class="tl-l">
+          <div class="tl-card">
+            <div class="tl-card-header">
+              <span class="tl-stage-num">Stage 04</span>
+              <span class="tl-stage-name">Executive Profiling</span>
+            </div>
+            <div class="tl-card-title">Identify decision-makers and buyers</div>
+            <div class="tl-output">→ Buying Committee Intelligence</div>
+            <div class="tl-details">
+              <div class="tl-sep"></div>
+              <div class="tl-purpose"><strong>Purpose:</strong> Identify key decision-makers and influencers within target accounts.</div>
+              <div class="tl-acts-lbl">Activities</div>
+              <div class="tl-acts">
+                <div class="tl-act"><span class="tl-act-bullet"></span>Discover executives and business stakeholders</div>
+                <div class="tl-act"><span class="tl-act-bullet"></span>Map buying committees and reporting structures</div>
+                <div class="tl-act"><span class="tl-act-bullet"></span>Identify CEO, CFO, CIO, CHRO, and LoB executives</div>
+                <div class="tl-act"><span class="tl-act-bullet"></span>Generate contact intelligence for outreach</div>
+              </div>
+              <div class="tl-tags">
+                <span class="tl-tag">C-Suite Mapping</span>
+                <span class="tl-tag">Buying Committee</span>
+                <span class="tl-tag">Contact Intel</span>
+                <span class="tl-tag">Outreach Data</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="tl-c">
+          <div class="tl-dot">
+            <div class="tl-dot-ico">
+              <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+            </div>
+          </div>
+        </div>
+        <div class="tl-r">
+          <div class="tl-conn">
+            <div class="tl-conn-line"></div>
+            <div class="tl-conn-badge">Key Stakeholders</div>
+            <div class="tl-conn-line"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- S5 — AI Scoring — RIGHT -->
+      <div class="tl-row odd fade-in">
+        <div class="tl-l">
+          <div class="tl-conn">
+            <div class="tl-conn-line"></div>
+            <div class="tl-conn-badge">ML Models</div>
+            <div class="tl-conn-line"></div>
+          </div>
+        </div>
+        <div class="tl-c">
+          <div class="tl-dot">
+            <div class="tl-dot-ico">
+              <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+            </div>
+          </div>
+        </div>
+        <div class="tl-r">
+          <div class="tl-card">
+            <div class="tl-card-header">
+              <span class="tl-stage-num">Stage 05</span>
+              <span class="tl-stage-name">AI Scoring</span>
+            </div>
+            <div class="tl-card-title">Prioritize accounts with highest potential</div>
+            <div class="tl-output">→ AI-Powered Account Prioritization</div>
+            <div class="tl-details">
+              <div class="tl-sep"></div>
+              <div class="tl-purpose"><strong>Purpose:</strong> Prioritize accounts based on their likelihood to engage and generate business opportunities.</div>
+              <div class="tl-acts-lbl">Activities</div>
+              <div class="tl-acts">
+                <div class="tl-act"><span class="tl-act-bullet"></span>Analyze historical CRM and campaign data</div>
+                <div class="tl-act"><span class="tl-act-bullet"></span>Evaluate account fit and engagement signals</div>
+                <div class="tl-act"><span class="tl-act-bullet"></span>Predict propensity to buy &amp; opportunity potential</div>
+                <div class="tl-act"><span class="tl-act-bullet"></span>Rank accounts by strategic fit and business value</div>
+              </div>
+              <div class="tl-tags">
+                <span class="tl-tag">Machine Learning</span>
+                <span class="tl-tag">Propensity Score</span>
+                <span class="tl-tag">Crystal Ball</span>
+                <span class="tl-tag">Databricks</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- S6 — Campaign Intelligence — LEFT -->
+      <div class="tl-row even fade-in">
+        <div class="tl-l">
+          <div class="tl-card">
+            <div class="tl-card-header">
+              <span class="tl-stage-num">Stage 06</span>
+              <span class="tl-stage-name">Campaign Intelligence</span>
+            </div>
+            <div class="tl-card-title">Predict campaign outcomes and pipeline impact</div>
+            <div class="tl-output">→ Predictive Performance Forecasts</div>
+            <div class="tl-details">
+              <div class="tl-sep"></div>
+              <div class="tl-purpose"><strong>Purpose:</strong> Predict campaign performance before execution. Evolve from descriptive to predictive marketing.</div>
+              <div class="tl-acts-lbl">Activities</div>
+              <div class="tl-acts">
+                <div class="tl-act"><span class="tl-act-bullet"></span>Analyze historical campaign outcomes</div>
+                <div class="tl-act"><span class="tl-act-bullet"></span>Forecast Open Rate, Click Rate, Meeting Rate</div>
+                <div class="tl-act"><span class="tl-act-bullet"></span>Recommend audience segments and messaging</div>
+                <div class="tl-act"><span class="tl-act-bullet"></span>Estimate pipeline generation potential before launch</div>
+              </div>
+              <div class="tl-tags">
+                <span class="tl-tag">Predictive Analytics</span>
+                <span class="tl-tag">Campaign ROI</span>
+                <span class="tl-tag">Outreach Data</span>
+                <span class="tl-tag">Pipeline Forecast</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="tl-c">
+          <div class="tl-dot">
+            <div class="tl-dot-ico">
+              <svg viewBox="0 0 24 24"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/></svg>
+            </div>
+          </div>
+        </div>
+        <div class="tl-r">
+          <div class="tl-conn">
+            <div class="tl-conn-line"></div>
+            <div class="tl-conn-badge">Predictive Marketing</div>
+            <div class="tl-conn-line"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- IMPACT -->
+<div class="section-wrap purple">
+  <div class="container">
+    <div class="impact-header fade-in">
+      <div class="eyebrow">Expected Business Impact</div>
+      <h2 class="sec-title">Data as a Strategic Growth Engine</h2>
+    </div>
+    <div class="impact-grid fade-in">
+      <div class="impact-card">
+        <div class="impact-ico"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg></div>
+        <div class="impact-title">CRM Quality</div>
+        <div class="impact-body">Trusted and validated company records with mandatory Tax ID and website governance across all regions.</div>
+      </div>
+      <div class="impact-card">
+        <div class="impact-ico"><svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></div>
+        <div class="impact-title">Market Coverage</div>
+        <div class="impact-body">Tens of thousands of new accounts identified across 5 LATAM countries and incorporated into CRM.</div>
+      </div>
+      <div class="impact-card hi">
+        <div class="impact-ico"><svg viewBox="0 0 24 24"><path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2M7.5 13A2.5 2.5 0 0 0 5 15.5 2.5 2.5 0 0 0 7.5 18a2.5 2.5 0 0 0 2.5-2.5A2.5 2.5 0 0 0 7.5 13m9 0a2.5 2.5 0 0 0-2.5 2.5 2.5 2.5 0 0 0 2.5 2.5 2.5 2.5 0 0 0 2.5-2.5A2.5 2.5 0 0 0 16.5 13z"/></svg></div>
+        <div class="impact-title">AI Enhancement</div>
+        <div class="impact-body">AI validates changes across multiple sources, interprets unstructured data, and prioritizes high-impact CRM updates — recommending update, enrichment, or human review.</div>
+      </div>
+      <div class="impact-card">
+        <div class="impact-ico"><svg viewBox="0 0 24 24"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/></svg></div>
+        <div class="impact-title">Sales Productivity</div>
+        <div class="impact-body">Better targeting and account prioritization — sales teams focus on highest-value opportunities.</div>
+      </div>
+      <div class="impact-card">
+        <div class="impact-ico"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></div>
+        <div class="impact-title">Marketing Performance</div>
+        <div class="impact-body">Improved segmentation and campaign effectiveness through predictive intelligence before launch.</div>
+      </div>
+      <div class="impact-card">
+        <div class="impact-ico"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/></svg></div>
+        <div class="impact-title">AI Readiness</div>
+        <div class="impact-body">Unified and scalable data foundation enabling future predictive models and advanced AI integrations.</div>
+      </div>
+    </div>
+    <div class="outcome-row fade-in">
+      <div class="outcome-ico"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+      <p class="outcome-text"><strong>Expected outcome</strong> — A continuously updated CRM with more accurate, reliable, traceable, and actionable account data that accelerates pipeline creation across Latin America.</p>
+    </div>
+  </div>
+</div>
+
+<!-- TECH -->
+<div class="section-wrap white">
+  <div class="container fade-in">
+    <div class="eyebrow">Technology Foundation</div>
+    <h2 class="sec-title">Powered by</h2>
+    <div class="tech-cols">
+      <div>
+        <div class="tech-group-title">New Capabilities</div>
+        <div class="tech-pills">
+          <span class="tech-pill new"><span class="tech-dot"></span>AFIP / ARCA</span>
+          <span class="tech-pill new"><span class="tech-dot"></span>Receita Federal</span>
+          <span class="tech-pill new"><span class="tech-dot"></span>SUNAT</span>
+          <span class="tech-pill new"><span class="tech-dot"></span>SII Chile</span>
+          <span class="tech-pill new"><span class="tech-dot"></span>DIAN Colombia</span>
+          <span class="tech-pill new"><span class="tech-dot"></span>SearchAPI</span>
+          <span class="tech-pill new"><span class="tech-dot"></span>Crystal Ball</span>
+          <span class="tech-pill new"><span class="tech-dot"></span>SAP BTP</span>
+          <span class="tech-pill new"><span class="tech-dot"></span>Databricks</span>
+        </div>
+      </div>
+      <div>
+        <div class="tech-group-title">Current Systems</div>
+        <div class="tech-pills">
+          <span class="tech-pill cur"><span class="tech-dot"></span>CRM Data</span>
+          <span class="tech-pill cur"><span class="tech-dot"></span>Outreach Data</span>
+          <span class="tech-pill cur"><span class="tech-dot"></span>Moodys / D&amp;B</span>
+          <span class="tech-pill cur"><span class="tech-dot"></span>External Providers</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FUTURE INNOVATION -->
+<div class="section-wrap white" id="future">
+  <div class="container">
+    <div class="future-header fade-in">
+      <div class="eyebrow">Looking Ahead</div>
+      <h2 class="sec-title">Future Innovation Opportunities</h2>
+      <p class="sec-intro">Beyond the 6-stage production line, the Account Intelligence Factory can evolve into a more connected, traceable, and automated intelligence ecosystem. These are not additional production stages, but strategic capabilities that can increase scalability, trust, and business impact over time.</p>
+    </div>
+
+    <div class="future-grid">
+
+      <!-- 1 -->
+      <div class="future-card fade-in">
+        <div class="future-card-top">
+          <div class="future-num">01</div>
+          <div class="future-icon">
+            <svg viewBox="0 0 24 24"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/></svg>
+          </div>
+        </div>
+        <div class="future-tag">Account Knowledge Graph</div>
+        <p class="future-body">Build a relationship-based intelligence layer connecting companies, subsidiaries, corporate groups, executives, industries, technologies, campaigns, opportunities, territories, and chambers of commerce.</p>
+        <p class="future-body">Instead of treating each account as an isolated CRM record, the Knowledge Graph would allow SAP LATAM to understand business ecosystems, ownership structures, market relationships, and hidden connections between accounts.</p>
+        <div class="future-value">
+          <span class="future-value-label">Expected value</span>
+          <p class="future-value-text">Deeper market intelligence, better segmentation, stronger account prioritization, and improved visibility into corporate ecosystems.</p>
+        </div>
+      </div>
+
+      <!-- 2 -->
+      <div class="future-card fade-in">
+        <div class="future-card-top">
+          <div class="future-num">02</div>
+          <div class="future-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 4l5 2.18V11c0 3.5-2.33 6.79-5 7.93-2.67-1.14-5-4.43-5-7.93V7.18L12 5z"/></svg>
+          </div>
+        </div>
+        <div class="future-tag">Account Data Passport</div>
+        <p class="future-body">Create a traceability layer for each account, showing where each data attribute came from, when it was last updated, which source validated it, and how reliable it is.</p>
+        <p class="future-body">The Data Passport would document the origin and confidence level of key attributes such as Tax ID, website, legal status, revenue, employees, industry, address, executive information, and enrichment sources.</p>
+        <div class="future-value">
+          <span class="future-value-label">Expected value</span>
+          <p class="future-value-text">Higher trust in CRM data, stronger governance, better auditability, and clearer decision-making for sales and marketing teams.</p>
+        </div>
+      </div>
+
+      <!-- 3 -->
+      <div class="future-card fade-in">
+        <div class="future-card-top">
+          <div class="future-num">03</div>
+          <div class="future-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2M7.5 13A2.5 2.5 0 0 0 5 15.5 2.5 2.5 0 0 0 7.5 18a2.5 2.5 0 0 0 2.5-2.5A2.5 2.5 0 0 0 7.5 13m9 0a2.5 2.5 0 0 0-2.5 2.5 2.5 2.5 0 0 0 2.5 2.5 2.5 2.5 0 0 0 2.5-2.5A2.5 2.5 0 0 0 16.5 13z"/></svg>
+          </div>
+        </div>
+        <div class="future-tag">Agentic Data Operations</div>
+        <p class="future-body">Introduce specialized AI agents to support operational orchestration across the data ecosystem. Agents could monitor sources, identify anomalies, validate changes, compare records, check governance rules, suggest next actions, and route exceptions for human review.</p>
+        <p class="future-body">This would not replace the data strategy, but act as an automation layer that increases speed, consistency, and traceability.</p>
+        <div class="future-value">
+          <span class="future-value-label">Expected value</span>
+          <p class="future-value-text">Higher automation, faster processing, lower manual workload, scalable data operations, and more consistent CRM updates.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-left">
+    <div class="footer-logo"><img src="sap-logo.png" alt="SAP" /></div>
+    <div class="footer-text">LATAM Account Intelligence Factory · <strong>Customer Data Intelligence</strong> · SAP LATAM</div>
+  </div>
+  <div class="footer-right"><strong>INTERNAL</strong> · SAP and Customer Only</div>
+</footer>
+
+<script>
+const bar = document.getElementById('scroll-bar');
+window.addEventListener('scroll', () => {
+  const pct = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight) * 100;
+  bar.style.width = pct + '%';
+}, { passive: true });
+
+const obs = new IntersectionObserver(
+  entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),
+  { threshold: 0.07, rootMargin: '0px 0px -24px 0px' }
+);
+document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
+
+function fixMobile() {
+  const mobile = window.innerWidth <= 820;
+  document.querySelectorAll('.tl-row.even').forEach(row => {
+    const cardSide = row.querySelector('.tl-l');
+    const connSide = row.querySelector('.tl-r');
+    if (!cardSide) return;
+    if (mobile) {
+      cardSide.style.display = 'none';
+      const card = cardSide.querySelector('.tl-card');
+      if (card && !connSide.querySelector('.tl-card')) {
+        connSide.innerHTML = '';
+        connSide.appendChild(card);
+      }
+      connSide.style.display = 'flex';
+    } else {
+      cardSide.style.display = '';
+      connSide.style.display = '';
+    }
+  });
+}
+fixMobile();
+window.addEventListener('resize', fixMobile);
+</script>
+</body>
+</html>

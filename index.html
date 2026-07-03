@@ -1,0 +1,1148 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Juliane Oliveira — Data & AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:         #fbfbfd;
+      --bg-alt:     #f5f5f7;
+      --surface:    #ffffff;
+      --border:     #e2e2e7;
+      --border-mid: #d1d1d6;
+      --rose:       #c9728f;
+      --rose-light: #e8a0b4;
+      --rose-dark:  #8b3a5a;
+      --rose-bg:    rgba(201,114,143,0.07);
+      --rose-bg2:   rgba(201,114,143,0.12);
+      --text:       #1d1d1f;
+      --text-mid:   #515154;
+      --text-dim:   #86868b;
+      --text-faint: #aeaeb2;
+      --white:      #ffffff;
+      --radius-card:  20px;
+      --radius-pill:  100px;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── FLOWER LOADER ── */
+    #flower-loader {
+      position: fixed; inset: 0; z-index: 9999;
+      background: #fbfbfd;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 2rem;
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    #flower-loader.done {
+      opacity: 0; transform: scale(1.04); pointer-events: none;
+    }
+    #flower-canvas { display: block; }
+    #flower-tagline {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.82rem; font-weight: 500;
+      color: #aeaeb2; letter-spacing: 0.08em; text-transform: lowercase;
+    }
+
+    /* ── SCROLL PROGRESS BAR ── */
+    #scroll-bar {
+      position: fixed; top: 0; left: 0; height: 2px; z-index: 200;
+      background: linear-gradient(90deg, var(--rose), var(--rose-light));
+      width: 0%; transition: width 0.1s linear;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(251,251,253,0.88);
+      backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 3rem; height: 56px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo { font-weight: 700; font-size: 0.95rem; letter-spacing: -0.02em; color: var(--text); }
+    .nav-logo span { color: var(--rose); }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a { color: var(--text-mid); text-decoration: none; font-size: 0.82rem; font-weight: 500; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--rose); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      align-items: center;
+      gap: 5rem;
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 7rem 3rem 5rem;
+      position: relative;
+    }
+    .hero-glow {
+      pointer-events: none;
+      position: absolute;
+      top: 10%; left: 50%;
+      transform: translateX(-60%);
+      width: 860px; height: 480px;
+      border-radius: 50%;
+      background: radial-gradient(50% 50% at 50% 50%, rgba(201,114,143,0.11), transparent 70%);
+      filter: blur(40px);
+      z-index: 0;
+    }
+    .hero-content { position: relative; z-index: 1; }
+    .hero-badges {
+      display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 2.5rem;
+    }
+    .pill {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-pill); padding: 0.3rem 0.9rem;
+      font-size: 0.75rem; font-weight: 500; color: var(--text-mid);
+    }
+    .pill-dot {
+      width: 5px; height: 5px; border-radius: 50%; background: var(--rose);
+      animation: pulse 2s infinite;
+    }
+    .pill.accent { background: var(--rose-bg); border-color: rgba(201,114,143,0.25); color: var(--rose); }
+    @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.35;} }
+
+    .hero h1 {
+      font-size: clamp(2.8rem, 5vw, 5.2rem); font-weight: 900;
+      letter-spacing: -0.04em; line-height: 1.0; color: var(--text); margin-bottom: 1.75rem;
+    }
+    .hero h1 .accent { color: var(--rose); }
+    .hero-sub {
+      font-size: 1.1rem; color: var(--text-mid); max-width: 520px;
+      line-height: 1.78; margin-bottom: 2.75rem; font-weight: 400;
+    }
+    .hero-actions { display: flex; gap: 0.85rem; flex-wrap: wrap; margin-bottom: 4rem; }
+    .btn-primary {
+      background: var(--text); color: var(--white); border: none;
+      border-radius: 10px; padding: 0.85rem 2rem; font-size: 0.9rem; font-weight: 600;
+      cursor: pointer; text-decoration: none; transition: background 0.2s, transform 0.15s; display: inline-block;
+    }
+    .btn-primary:hover { background: #2d2d2f; transform: translateY(-1px); }
+    .btn-rose {
+      background: var(--rose); color: var(--white); border: none;
+      border-radius: 10px; padding: 0.85rem 2rem; font-size: 0.9rem; font-weight: 600;
+      cursor: pointer; text-decoration: none; transition: background 0.2s, transform 0.15s; display: inline-block;
+    }
+    .btn-rose:hover { background: #b85e7c; transform: translateY(-1px); }
+    .btn-ghost {
+      background: transparent; color: var(--text-mid); border: 1px solid var(--border);
+      border-radius: 10px; padding: 0.85rem 2rem; font-size: 0.9rem; font-weight: 500;
+      cursor: pointer; text-decoration: none; transition: border-color 0.2s, color 0.2s, transform 0.15s; display: inline-block;
+    }
+    .btn-ghost:hover { border-color: var(--rose); color: var(--rose); transform: translateY(-1px); }
+
+    .hero-stats { display: flex; gap: 2.5rem; flex-wrap: wrap; }
+    .stat-number {
+      display: block; font-size: 2rem; font-weight: 800;
+      color: var(--text); letter-spacing: -0.04em; line-height: 1;
+    }
+    .stat-number .unit { color: var(--rose); }
+    .stat-label { font-size: 0.72rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.07em; margin-top: 0.3rem; }
+
+    /* ── HERO PHOTOS ── */
+    .hero-photo-wrap { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 0.85rem; }
+    .hero-photo-main {
+      width: 100%; aspect-ratio: 3/4; border-radius: var(--radius-card);
+      border: 1px solid var(--border); background: var(--bg-alt);
+      overflow: hidden; display: flex; align-items: center; justify-content: center;
+    }
+    .hero-photo-main img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .hero-photo-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem; }
+    .hero-photo-sm {
+      aspect-ratio: 1/1; border-radius: 14px; border: 1px solid var(--border);
+      background: var(--bg-alt); overflow: hidden; display: flex; align-items: center; justify-content: center;
+    }
+    .hero-photo-sm img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    /* ── PLACEHOLDER ── */
+    .ph {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 0.6rem; color: var(--text-faint); font-size: 0.73rem; text-align: center;
+      padding: 1.5rem; width: 100%; height: 100%; line-height: 1.5;
+    }
+    .ph-icon {
+      width: 40px; height: 40px; border-radius: 50%;
+      border: 1.5px dashed var(--border-mid);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .ph-icon svg { width: 18px; height: 18px; stroke: var(--text-faint); fill: none; stroke-width: 1.5; }
+
+    /* ── DIVIDER ── */
+    .divider { height: 1px; background: var(--border); }
+
+    /* ── SECTIONS ── */
+    section { padding: 9rem 3rem; }
+    .container { max-width: 1160px; margin: 0 auto; }
+    .eyebrow {
+      display: inline-block; font-size: 0.7rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.14em; color: var(--rose); margin-bottom: 1rem;
+    }
+    .section-title {
+      font-size: clamp(2rem, 4vw, 3.4rem); font-weight: 800;
+      letter-spacing: -0.03em; color: var(--text); line-height: 1.08; margin-bottom: 1.25rem;
+    }
+    .section-intro {
+      font-size: 1.05rem; color: var(--text-mid); max-width: 540px;
+      line-height: 1.8; margin-bottom: 4.5rem;
+    }
+
+    /* ── STORY ── */
+    .story-layout { display: grid; grid-template-columns: 380px 1fr; gap: 5rem; align-items: start; }
+    .story-photo-col { position: sticky; top: 80px; display: flex; flex-direction: column; gap: 0.85rem; }
+    .story-mosaic { display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem; }
+    .pf-wide { grid-column: 1/-1; aspect-ratio: 16/9; border-radius: 18px; border: 1px solid var(--border); background: var(--bg-alt); overflow: hidden; display: flex; align-items: center; justify-content: center; }
+    .pf-wide img { width: 100%; height: 100%; object-fit: cover; }
+    .pf-sq { aspect-ratio: 1/1; border-radius: 14px; border: 1px solid var(--border); background: var(--bg-alt); overflow: hidden; display: flex; align-items: center; justify-content: center; }
+    .pf-sq img { width: 100%; height: 100%; object-fit: cover; }
+    .pf-cap { font-size: 0.7rem; color: var(--text-dim); text-align: center; letter-spacing: 0.04em; }
+
+    /* Timeline */
+    .timeline { position: relative; padding-left: 2.5rem; }
+    .timeline::before {
+      content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 1px;
+      background: linear-gradient(to bottom, transparent, var(--rose-light) 8%, var(--rose-light) 92%, transparent);
+    }
+    .timeline-item { position: relative; padding-bottom: 4.5rem; padding-left: 1.75rem; }
+    .timeline-item:last-child { padding-bottom: 0; }
+    .timeline-dot {
+      position: absolute; left: -2.9rem; top: 0.5rem;
+      width: 9px; height: 9px; border-radius: 50%;
+      background: var(--rose); box-shadow: 0 0 0 3px rgba(201,114,143,0.18);
+    }
+    .timeline-num { font-size: 0.65rem; font-weight: 700; color: var(--text-faint); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.4rem; }
+    .timeline-chapter { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--rose); margin-bottom: 0.45rem; }
+    .timeline-heading { font-size: 1.2rem; font-weight: 700; color: var(--text); margin-bottom: 0.75rem; letter-spacing: -0.02em; line-height: 1.3; }
+    .timeline-text { color: var(--text-mid); line-height: 1.8; font-size: 0.92rem; margin-bottom: 1.25rem; }
+    .timeline-photos { display: flex; gap: 0.65rem; flex-wrap: wrap; }
+    .tph { border-radius: 12px; border: 1px solid var(--border); background: var(--bg-alt); overflow: hidden; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .tph-wide { width: 190px; height: 120px; }
+    .tph-sq   { width: 120px; height: 120px; }
+    .tph-tall { width: 100px; height: 150px; }
+    .tph img  { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    /* ── MINDSET / PILARES ── */
+    .mindset-section { background: var(--bg-alt); }
+    .mindset-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.25rem; }
+    .mindset-card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-card);
+      padding: 2rem 2.25rem; transition: border-color 0.2s, transform 0.2s;
+    }
+    .mindset-card:hover { border-color: var(--rose-light); transform: translateY(-2px); }
+    .mindset-number { font-size: 2.2rem; font-weight: 900; color: var(--rose); letter-spacing: -0.06em; line-height: 1; margin-bottom: 1rem; opacity: 0.35; }
+    .mindset-title { font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 0.6rem; }
+    .mindset-body { font-size: 0.85rem; color: var(--text-mid); line-height: 1.7; }
+
+    /* ── IMPACT ── */
+    .feature-card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 24px;
+      padding: 3.5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem;
+      align-items: start; position: relative; overflow: hidden; margin-bottom: 2.5rem;
+    }
+    .feature-card::before {
+      content: ''; position: absolute; top: -30%; right: -10%;
+      width: 400px; height: 400px;
+      background: radial-gradient(50% 50% at 50% 50%, rgba(201,114,143,0.07), transparent 70%);
+      pointer-events: none;
+    }
+    .feature-card h3 { font-size: 1.9rem; font-weight: 800; letter-spacing: -0.03em; color: var(--text); margin-bottom: 1.1rem; line-height: 1.15; }
+    .feature-card p { color: var(--text-mid); line-height: 1.8; margin-bottom: 1.75rem; font-size: 0.93rem; }
+    .tag-row { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+    .tag { background: var(--rose-bg); border: 1px solid rgba(201,114,143,0.18); color: var(--rose); border-radius: 6px; padding: 0.3rem 0.75rem; font-size: 0.78rem; font-weight: 500; }
+    .tag.neutral { background: var(--bg-alt); border-color: var(--border); color: var(--text-mid); }
+    .metrics-col { display: flex; flex-direction: column; gap: 1.1rem; }
+    .metric-card { background: var(--bg-alt); border: 1px solid var(--border); border-radius: 14px; padding: 1.4rem 1.75rem; }
+    .metric-num { font-size: 1.9rem; font-weight: 800; color: var(--rose); letter-spacing: -0.04em; line-height: 1; }
+    .metric-label { font-size: 0.78rem; color: var(--text-dim); margin-top: 0.25rem; }
+
+    /* Tools gallery */
+    .tools-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em; color: var(--rose); margin-bottom: 1.25rem; }
+    .tools-gallery {
+      display: flex; gap: 1.1rem; overflow-x: auto; padding-bottom: 1rem;
+    }
+    .tools-gallery::-webkit-scrollbar { height: 3px; }
+    .tools-gallery::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+    .tool-frame {
+      flex: 0 0 auto; width: 300px;
+      border-radius: 16px; border: 1px solid var(--border); background: var(--surface);
+      overflow: hidden; transition: border-color 0.2s, transform 0.2s;
+    }
+    .tool-frame:hover { border-color: var(--rose-light); transform: translateY(-2px); }
+    .tool-img { width: 100%; height: 176px; background: var(--bg-alt); overflow: hidden; display: flex; align-items: center; justify-content: center; }
+    .tool-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .tool-cap { padding: 1rem 1.2rem 1.25rem; }
+    .tool-cap-title { font-size: 0.85rem; font-weight: 600; color: var(--text); margin-bottom: 0.2rem; }
+    .tool-cap-desc { font-size: 0.76rem; color: var(--text-dim); line-height: 1.5; }
+
+    .impact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.25rem; margin-top: 2.5rem; }
+    .impact-card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-card);
+      padding: 2.25rem; position: relative; overflow: hidden; transition: border-color 0.2s, transform 0.2s;
+    }
+    .impact-card:hover { border-color: var(--rose-light); transform: translateY(-2px); }
+    .impact-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--rose-dark), var(--rose)); }
+    .impact-big { font-size: 2.5rem; font-weight: 800; color: var(--text); letter-spacing: -0.04em; line-height: 1; margin-bottom: 0.45rem; margin-top: 1.5rem; }
+    .impact-big span { color: var(--rose); }
+    .impact-lbl { font-size: 0.85rem; font-weight: 600; color: var(--text-mid); margin-bottom: 0.6rem; }
+    .impact-desc { font-size: 0.82rem; color: var(--text-dim); line-height: 1.65; }
+
+    /* ── AWARDS ── */
+    .awards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(255px, 1fr)); gap: 1.25rem; margin-bottom: 2.5rem; }
+    .award-card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-card);
+      overflow: hidden; transition: border-color 0.2s, transform 0.2s;
+    }
+    .award-card:hover { border-color: var(--rose-light); transform: translateY(-2px); }
+    .award-img { width: 100%; height: 170px; background: var(--bg-alt); overflow: hidden; display: flex; align-items: center; justify-content: center; }
+    .award-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .award-body { padding: 1.6rem 1.85rem 1.85rem; }
+    .award-place { font-size: 1.65rem; font-weight: 900; color: var(--rose); letter-spacing: -0.04em; line-height: 1; margin-bottom: 0.65rem; }
+    .award-title { font-size: 0.92rem; font-weight: 700; color: var(--text); margin-bottom: 0.25rem; line-height: 1.35; }
+    .award-evt { font-size: 0.75rem; color: var(--rose); font-weight: 500; margin-bottom: 0.65rem; }
+    .award-desc { font-size: 0.8rem; color: var(--text-dim); line-height: 1.6; }
+
+    /* ── PROJECTS ── */
+    .projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 1.25rem; }
+    .project-card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-card);
+      overflow: hidden; transition: border-color 0.2s, transform 0.2s;
+    }
+    .project-card:hover { border-color: var(--rose-light); transform: translateY(-2px); }
+    .project-img { width: 100%; height: 190px; background: var(--bg-alt); overflow: hidden; display: flex; align-items: center; justify-content: center; }
+    .project-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .project-body { padding: 1.6rem 1.85rem 1.85rem; }
+    .project-num { font-size: 0.67rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-faint); margin-bottom: 0.7rem; }
+    .project-title { font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 0.7rem; letter-spacing: -0.02em; line-height: 1.3; }
+    .project-desc { font-size: 0.84rem; color: var(--text-mid); line-height: 1.7; margin-bottom: 1.2rem; }
+    .project-tech { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .project-tech span { background: var(--bg-alt); border: 1px solid var(--border); border-radius: 4px; padding: 0.2rem 0.6rem; font-size: 0.7rem; color: var(--text-dim); font-weight: 500; }
+
+    /* ── CERTIFICATIONS ── */
+    .certs-section { background: var(--bg-alt); }
+    .certs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.1rem; }
+    .cert-card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+      padding: 1.5rem 1.75rem; display: flex; gap: 1rem; align-items: flex-start;
+      transition: border-color 0.2s;
+    }
+    .cert-card:hover { border-color: var(--rose-light); }
+    .cert-icon {
+      width: 36px; height: 36px; flex-shrink: 0; border-radius: 8px;
+      background: var(--rose-bg); border: 1px solid rgba(201,114,143,0.2);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .cert-icon svg { width: 16px; height: 16px; stroke: var(--rose); fill: none; stroke-width: 1.8; }
+    .cert-name { font-size: 0.85rem; font-weight: 600; color: var(--text); margin-bottom: 0.2rem; line-height: 1.35; }
+    .cert-org { font-size: 0.75rem; color: var(--text-dim); }
+
+    /* ── SKILLS ── */
+    .skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem; }
+    .skill-group { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-card); padding: 2rem 2.25rem; }
+    .skill-group-title { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--rose); margin-bottom: 1.25rem; }
+    .skill-tags { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+    .stag { background: var(--bg-alt); border: 1px solid var(--border); color: var(--text-mid); border-radius: 6px; padding: 0.32rem 0.75rem; font-size: 0.78rem; font-weight: 500; transition: border-color 0.2s, color 0.2s; }
+    .stag:hover { border-color: var(--rose-light); color: var(--rose); }
+    .stag.hi { background: var(--rose-bg); border-color: rgba(201,114,143,0.22); color: var(--rose); }
+
+    /* ── ABOUT / CONTACT ── */
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: start; }
+    .about-photos { display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem; margin-bottom: 2.5rem; }
+    .about-pf { border-radius: 16px; border: 1px solid var(--border); background: var(--bg-alt); overflow: hidden; display: flex; align-items: center; justify-content: center; }
+    .about-pf-tall { aspect-ratio: 3/4; grid-row: 1/3; }
+    .about-pf-sq { aspect-ratio: 1/1; }
+    .about-pf img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .about-text { font-size: 1rem; color: var(--text-mid); line-height: 1.85; }
+    .about-text p { margin-bottom: 1.3rem; }
+    .about-text p:last-child { margin-bottom: 0; }
+    .about-text strong { color: var(--text); font-weight: 600; }
+    .contact-links { display: flex; flex-direction: column; gap: 0.85rem; margin-top: 2.5rem; }
+    .contact-item {
+      display: flex; align-items: center; gap: 1.1rem;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 14px; padding: 1.1rem 1.4rem; text-decoration: none;
+      transition: border-color 0.2s; cursor: default;
+    }
+    a.contact-item { cursor: pointer; }
+    a.contact-item:hover { border-color: var(--rose); }
+    .contact-icon-box {
+      width: 38px; height: 38px; border-radius: 9px;
+      background: var(--rose-bg); border: 1px solid rgba(201,114,143,0.18);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .contact-icon-box svg { width: 16px; height: 16px; stroke: var(--rose); fill: none; stroke-width: 1.8; }
+    .contact-lbl { font-size: 0.68rem; color: var(--text-faint); text-transform: uppercase; letter-spacing: 0.07em; font-weight: 600; }
+    .contact-val { font-size: 0.88rem; color: var(--text); font-weight: 500; margin-top: 0.1rem; }
+
+    /* ── FOOTER ── */
+    footer { border-top: 1px solid var(--border); padding: 2.5rem 3rem; text-align: center; color: var(--text-dim); font-size: 0.8rem; }
+    footer strong { color: var(--rose); font-weight: 500; }
+    .footer-sub { margin-top: 0.5rem; font-size: 0.72rem; color: var(--text-faint); }
+
+    .tools-gallery-wrap { margin-bottom: 2.5rem; }
+    .footer-back { margin-top: 1.25rem; }
+    .footer-back-link { font-size: 0.78rem; color: var(--rose); text-decoration: none; font-weight: 500; }
+
+    /* ── BACK TO TOP ── */
+    #back-top {
+      position: fixed; bottom: 2rem; right: 2rem; z-index: 99;
+      width: 44px; height: 44px; border-radius: 50%;
+      background: var(--surface); border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      opacity: 0; transform: translateY(8px);
+      transition: opacity 0.3s, transform 0.3s, border-color 0.2s;
+    }
+    #back-top.show { opacity: 1; transform: none; }
+    #back-top:hover { border-color: var(--rose); }
+    #back-top svg { width: 16px; height: 16px; stroke: var(--text-mid); fill: none; stroke-width: 2; }
+
+    /* ── FADE IN ── */
+    .fade-in { opacity: 0; transform: translateY(24px); transition: opacity 0.65s ease, transform 0.65s ease; }
+    .fade-in.visible { opacity: 1; transform: none; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1000px) {
+      .story-layout { grid-template-columns: 1fr; gap: 3rem; }
+      .story-photo-col { position: static; }
+    }
+    @media (max-width: 860px) {
+      nav { padding: 0 1.5rem; }
+      .nav-links { display: none; }
+      .hero { grid-template-columns: 1fr; padding: 7rem 1.5rem 4rem; gap: 3rem; }
+      .hero-photo-wrap { max-width: 320px; margin: 0 auto; }
+      .feature-card { grid-template-columns: 1fr; gap: 2.5rem; padding: 2.5rem; }
+      .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+      section { padding: 6rem 1.5rem; }
+      footer { padding: 2.5rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="scroll-bar"></div>
+
+<!-- FLOWER LOADER -->
+<div id="flower-loader">
+  <canvas id="flower-canvas"></canvas>
+  <div id="flower-tagline">carregando sua história<span id="flower-dots"></span></div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Juliane <span>Oliveira</span></div>
+  <ul class="nav-links">
+    <li><a href="#story">Trajetória</a></li>
+    <li><a href="#mindset">Mindset</a></li>
+    <li><a href="#impact">Impacto</a></li>
+    <li><a href="#projects">Projetos</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#contact">Contato</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-content fade-in">
+    <div class="hero-badges">
+      <span class="pill accent"><span class="pill-dot"></span>Disponível para oportunidades</span>
+      <span class="pill">SAP iXp Intern</span>
+      <span class="pill">IBMEC SP</span>
+      <span class="pill">Data & AI</span>
+    </div>
+    <h1>Transformando<br/>dados em <span class="accent">impacto</span><br/>real.</h1>
+    <p class="hero-sub">De uma área completamente diferente para o coração da inovação em uma das maiores empresas de tecnologia do mundo. Esta é a história de quem não esperou o caminho — construiu um.</p>
+    <div class="hero-actions">
+      <a href="#story" class="btn-rose">Conheça a história</a>
+      <a href="#contact" class="btn-ghost">Entre em contato</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat">
+        <span class="stat-number" data-count="60" data-suffix="k">0k</span>
+        <span class="stat-label">Empresas validadas</span>
+      </div>
+      <div class="stat">
+        <span class="stat-number" data-count="5" data-suffix="k+">0k+</span>
+        <span class="stat-label">CNPJs inativos identificados</span>
+      </div>
+      <div class="stat">
+        <span class="stat-number" data-count="800" data-suffix="k">0k</span>
+        <span class="stat-label">Empresas analisadas</span>
+      </div>
+      <div class="stat">
+        <span class="stat-number" data-count="5" data-suffix="">0</span>
+        <span class="stat-label">Países — LATAM</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-photo-wrap fade-in">
+    <div class="hero-photo-main">
+      <!-- <img src="fotos/perfil.jpg" alt="Juliane Oliveira" /> -->
+      <div class="ph"><div class="ph-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></div><span>Foto de perfil<br/>proporção 3:4</span></div>
+    </div>
+    <div class="hero-photo-row">
+      <div class="hero-photo-sm">
+        <!-- <img src="fotos/hero-2.jpg" alt="" /> -->
+        <div class="ph"><div class="ph-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg></div><span>SAP / IBMEC</span></div>
+      </div>
+      <div class="hero-photo-sm">
+        <!-- <img src="fotos/hero-3.jpg" alt="" /> -->
+        <div class="ph"><div class="ph-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg></div><span>Evento / prêmio</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- STORY -->
+<section id="story">
+  <div class="container">
+    <div class="fade-in">
+      <span class="eyebrow">Trajetória</span>
+      <h2 class="section-title">Uma jornada de<br/>transformação.</h2>
+      <p class="section-intro">Esta não é uma história sobre tecnologia. É sobre coragem, curiosidade e a capacidade de construir um caminho onde ele ainda não existia.</p>
+    </div>
+
+    <div class="story-layout">
+      <div class="story-photo-col fade-in">
+        <div class="story-mosaic">
+          <div class="pf-wide">
+            <!-- <img src="fotos/story-ibmec.jpg" alt="IBMEC" /> -->
+            <div class="ph"><div class="ph-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg></div><span>Foto IBMEC / evento</span></div>
+          </div>
+          <div class="pf-sq">
+            <!-- <img src="fotos/story-sap1.jpg" alt="SAP" /> -->
+            <div class="ph"><div class="ph-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg></div><span>SAP escritório</span></div>
+          </div>
+          <div class="pf-sq">
+            <!-- <img src="fotos/story-sap2.jpg" alt="Apresentação SAP" /> -->
+            <div class="ph"><div class="ph-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg></div><span>Apresentação SAP</span></div>
+          </div>
+        </div>
+        <p class="pf-cap">SAP iXp Intern · Customer Data Intelligence · Jan 2025 – Atual</p>
+      </div>
+
+      <div class="timeline fade-in">
+
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-num">01</div>
+          <div class="timeline-chapter">O início</div>
+          <div class="timeline-heading">Escritório de advocacia — os primeiros fundamentos</div>
+          <p class="timeline-text">Antes da tecnologia, o primeiro contato com o mundo corporativo ensinou organização, disciplina e atenção aos detalhes. Mas a percepção era clara: o futuro estaria mais perto da inovação e da construção de soluções.</p>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-num">02</div>
+          <div class="timeline-chapter">Liderança operacional</div>
+          <div class="timeline-heading">Pet Móvel — gestão real e aprendizados humanos</div>
+          <p class="timeline-text">Na administração de uma franquia de Pet Móvel, a responsabilidade era total: gestão operacional, equipe, agenda e atendimento ao cliente. Foi aí que a convicção se formou — tecnologia só gera valor quando resolve problemas reais das pessoas.</p>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-num">03</div>
+          <div class="timeline-chapter">A grande virada</div>
+          <div class="timeline-heading">IBMEC SP — a decisão que mudou tudo</div>
+          <p class="timeline-text">Descobriu um curso ainda raro no Brasil: Ciência de Dados e Inteligência Artificial. A intersecção perfeita entre negócios, tecnologia e inovação. Decidiu mudar completamente de carreira e ingressou no IBMEC São Paulo.</p>
+          <div class="timeline-photos">
+            <div class="tph tph-wide"><!-- <img src="fotos/ibmec-fachada.jpg" alt="IBMEC SP" /> --><div class="ph"><span>IBMEC SP</span></div></div>
+            <div class="tph tph-sq"><!-- <img src="fotos/ibmec-aula.jpg" alt="Sala de aula" /> --><div class="ph"><span>Sala de aula</span></div></div>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-num">04</div>
+          <div class="timeline-chapter">Protagonismo acadêmico</div>
+          <div class="timeline-heading">IBMEC Star — a primeira mulher do curso</div>
+          <p class="timeline-text">Assumiu a Diretoria de Eventos, organizando encontros com executivos da Coca-Cola, Johnson & Johnson e grandes líderes do mercado. Em 2024, conquistou o prêmio IBMEC Star — tornando-se a primeira mulher do curso de Ciência de Dados e IA a receber a premiação por excelência acadêmica.</p>
+          <div class="timeline-photos">
+            <div class="tph tph-tall"><!-- <img src="fotos/ibmec-star-premio.jpg" alt="IBMEC Star" /> --><div class="ph"><span>Prêmio<br/>IBMEC Star</span></div></div>
+            <div class="tph tph-wide"><!-- <img src="fotos/ibmec-evento.jpg" alt="Evento IBMEC" /> --><div class="ph"><span>Evento com executivos</span></div></div>
+            <div class="tph tph-sq"><!-- <img src="fotos/ibmec-evento2.jpg" alt="Diretoria de Eventos" /> --><div class="ph"><span>Diretoria de Eventos</span></div></div>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-num">05</div>
+          <div class="timeline-chapter">SAP · Janeiro 2025</div>
+          <div class="timeline-heading">SAP iXp — Customer Data Intelligence</div>
+          <p class="timeline-text">Ingressou na SAP como Sales Development Executive e logo foi transferida para a área de Data Research. O que começou como validação manual de registros se tornaria a maior iniciativa de inteligência de dados da área — ainda como estudante, antes de concluir a graduação.</p>
+          <div class="timeline-photos">
+            <div class="tph tph-wide"><!-- <img src="fotos/sap-escritorio.jpg" alt="SAP escritório" /> --><div class="ph"><span>SAP escritório</span></div></div>
+            <div class="tph tph-sq"><!-- <img src="fotos/sap-cracha.jpg" alt="Crachá SAP" /> --><div class="ph"><span>Crachá SAP</span></div></div>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-num">06</div>
+          <div class="timeline-chapter">O problema dos 60 mil</div>
+          <div class="timeline-heading">"Por que estamos fazendo isso manualmente?"</div>
+          <p class="timeline-text">A área precisava validar ~60 mil empresas no CRM — tudo feito a uma por uma, em Excel. A pergunta surgiu naturalmente. Pesquisou APIs públicas, explorou bases governamentais e construiu pipelines em Python que processaram todo o volume em cerca de 5 dias. Mais de 5 mil CNPJs inativos identificados. CRM limpo. Time liberado para o que importa.</p>
+          <div class="timeline-photos">
+            <div class="tph tph-wide"><!-- <img src="fotos/pipeline-codigo.jpg" alt="Pipeline Python" /> --><div class="ph"><span>Pipeline Python</span></div></div>
+            <div class="tph tph-wide"><!-- <img src="fotos/resultado-crm.jpg" alt="Resultado CRM" /> --><div class="ph"><span>Dashboard resultado</span></div></div>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-num">07</div>
+          <div class="timeline-chapter">Expansão regional</div>
+          <div class="timeline-heading">Brasil, Chile, Argentina, Peru, Colômbia</div>
+          <p class="timeline-text">Percebeu que o problema se repetia em outros países. Desenvolveu soluções para toda a América Latina usando APIs governamentais, dados abertos e web scraping — transformando uma iniciativa local em um projeto regional de escala.</p>
+          <div class="timeline-photos">
+            <div class="tph tph-wide"><!-- <img src="fotos/latam-apis.jpg" alt="LATAM coverage" /> --><div class="ph"><span>Cobertura LATAM</span></div></div>
+            <div class="tph tph-sq"><!-- <img src="fotos/api-integracao.jpg" alt="APIs" /> --><div class="ph"><span>Integração APIs</span></div></div>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-num">08</div>
+          <div class="timeline-chapter">A plataforma</div>
+          <div class="timeline-heading">Account Intelligence Engine — de scripts a produto</div>
+          <p class="timeline-text">Criou uma plataforma interna de inteligência de contas conectando APIs, CRM, dados públicos e privados, automação e inteligência comercial. Transformou experimentações em produtos reais usando Python, SAP BTP, SAP AI Core, Databricks, LangChain e SQL. Os resultados chegaram à Vice-Presidência da SAP Brasil.</p>
+          <div class="timeline-photos">
+            <div class="tph tph-wide"><!-- <img src="fotos/aie-interface.jpg" alt="AIE" /> --><div class="ph"><span>Interface AIE</span></div></div>
+            <div class="tph tph-wide"><!-- <img src="fotos/sap-vp.jpg" alt="Apresentação VP" /> --><div class="ph"><span>Apresentação VP SAP</span></div></div>
+            <div class="tph tph-sq"><!-- <img src="fotos/databricks-nb.jpg" alt="Databricks" /> --><div class="ph"><span>Databricks</span></div></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- MINDSET -->
+<section id="mindset" class="mindset-section">
+  <div class="container">
+    <div class="fade-in">
+      <span class="eyebrow">Mindset</span>
+      <h2 class="section-title">O que move<br/>a trajetória.</h2>
+      <p class="section-intro">Não é só o que sei fazer — é como penso, o que acredito e como me comporto diante de problemas.</p>
+    </div>
+    <div class="mindset-grid fade-in">
+      <div class="mindset-card">
+        <div class="mindset-number">01</div>
+        <div class="mindset-title">Resiliência</div>
+        <div class="mindset-body">Quando assume um compromisso, vai até o fim. Quando encontra um problema, procura a solução. Quando não existe um caminho, constrói um.</div>
+      </div>
+      <div class="mindset-card">
+        <div class="mindset-number">02</div>
+        <div class="mindset-title">Curiosidade</div>
+        <div class="mindset-body">Grande parte das conquistas surgiram porque questionava processos existentes. A pergunta que guia: "Existe uma forma melhor de fazer isso?"</div>
+      </div>
+      <div class="mindset-card">
+        <div class="mindset-number">03</div>
+        <div class="mindset-title">Coragem</div>
+        <div class="mindset-body">Mudou completamente de carreira. Saiu de uma área tradicional para uma extremamente nova. Assumiu riscos, aprendeu tecnologias complexas, construiu soluções sem que pedissem.</div>
+      </div>
+      <div class="mindset-card">
+        <div class="mindset-number">04</div>
+        <div class="mindset-title">Diligência</div>
+        <div class="mindset-body">Cumpre o que promete. Entrega resultados. Executa com qualidade. Tem senso de dono sobre o trabalho que assina.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- IMPACT -->
+<section id="impact">
+  <div class="container">
+    <div class="fade-in">
+      <span class="eyebrow">Impacto</span>
+      <h2 class="section-title">Números que<br/>falam por si.</h2>
+      <p class="section-intro">Impacto não é intenção — é resultado. Cada número representa um problema real resolvido.</p>
+    </div>
+
+    <div class="feature-card fade-in">
+      <div>
+        <span class="eyebrow">Projeto principal</span>
+        <h3>Account Intelligence Engine</h3>
+        <p>Plataforma interna de inteligência de contas desenvolvida do zero. Conecta automação, APIs governamentais de 5 países, CRM, dados públicos e privados — transformando completamente o processo de enriquecimento de dados da área e mudando seu escopo estratégico.</p>
+        <div class="tag-row">
+          <span class="tag">Python</span>
+          <span class="tag">SAP BTP</span>
+          <span class="tag">SAP AI Core</span>
+          <span class="tag">Databricks</span>
+          <span class="tag">LangChain</span>
+          <span class="tag">SQL</span>
+          <span class="tag">APIs REST/SOAP</span>
+        </div>
+      </div>
+      <div class="metrics-col">
+        <div class="metric-card"><div class="metric-num">60k</div><div class="metric-label">empresas validadas em ~5 dias (antes: meses)</div></div>
+        <div class="metric-card"><div class="metric-num">5k+</div><div class="metric-label">CNPJs inativos identificados</div></div>
+        <div class="metric-card"><div class="metric-num">800k</div><div class="metric-label">empresas analisadas para expansão comercial</div></div>
+        <div class="metric-card"><div class="metric-num">5 países</div><div class="metric-label">cobertura LATAM: BR, CL, AR, PE, CO</div></div>
+      </div>
+    </div>
+
+    <!-- TOOLS GALLERY -->
+    <div class="fade-in tools-gallery-wrap">
+      <div class="tools-label">Ferramentas criadas</div>
+      <div class="tools-gallery">
+        <div class="tool-frame"><div class="tool-img"><!-- <img src="fotos/tool-aie-dashboard.jpg" alt="AIE Dashboard" /> --><div class="ph"><div class="ph-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 9h6M9 12h6M9 15h4"/></svg></div><span>Screenshot</span></div></div><div class="tool-cap"><div class="tool-cap-title">Account Intelligence Engine</div><div class="tool-cap-desc">Plataforma principal — enriquecimento e validação de contas</div></div></div>
+        <div class="tool-frame"><div class="tool-img"><!-- <img src="fotos/tool-api-brasil.jpg" alt="API Brasil" /> --><div class="ph"><div class="ph-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 9h6M9 12h6M9 15h4"/></svg></div><span>Screenshot</span></div></div><div class="tool-cap"><div class="tool-cap-title">Pipeline API Brasil</div><div class="tool-cap-desc">Receita Federal, CNPJ JA · 60k empresas validadas</div></div></div>
+        <div class="tool-frame"><div class="tool-img"><!-- <img src="fotos/tool-latam.jpg" alt="LATAM APIs" /> --><div class="ph"><div class="ph-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 9h6M9 12h6M9 15h4"/></svg></div><span>Screenshot</span></div></div><div class="tool-cap"><div class="tool-cap-title">APIs América Latina</div><div class="tool-cap-desc">Chile, Argentina, Peru, Colômbia — APIs governamentais</div></div></div>
+        <div class="tool-frame"><div class="tool-img"><!-- <img src="fotos/tool-databricks.jpg" alt="Databricks" /> --><div class="ph"><div class="ph-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 9h6M9 12h6M9 15h4"/></svg></div><span>Screenshot</span></div></div><div class="tool-cap"><div class="tool-cap-title">Databricks — Análise exploratória</div><div class="tool-cap-desc">Segmentação e qualidade de contas LATAM</div></div></div>
+        <div class="tool-frame"><div class="tool-img"><!-- <img src="fotos/tool-sap-btp.jpg" alt="SAP BTP" /> --><div class="ph"><div class="ph-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 9h6M9 12h6M9 15h4"/></svg></div><span>Screenshot</span></div></div><div class="tool-cap"><div class="tool-cap-title">SAP BTP / AI Core</div><div class="tool-cap-desc">Dashboards e automações com LangChain e NLP</div></div></div>
+        <div class="tool-frame"><div class="tool-img"><!-- <img src="fotos/tool-800k.jpg" alt="800k análise" /> --><div class="ph"><div class="ph-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 9h6M9 12h6M9 15h4"/></svg></div><span>Screenshot</span></div></div><div class="tool-cap"><div class="tool-cap-title">Análise de 800k empresas</div><div class="tool-cap-desc">Expansão comercial — inteligência para vendas</div></div></div>
+      </div>
+    </div>
+
+    <div class="impact-grid fade-in">
+      <div class="impact-card"><div class="impact-big">100<span>×</span></div><div class="impact-lbl">Velocidade de processamento</div><div class="impact-desc">Validação que levaria meses passou a ser executada em dias com automação via Python e APIs governamentais.</div></div>
+      <div class="impact-card"><div class="impact-big">5</div><div class="impact-lbl">Países integrados</div><div class="impact-desc">APIs governamentais integradas para Brasil, Chile, Argentina, Peru e Colômbia — cobertura regional completa.</div></div>
+      <div class="impact-card"><div class="impact-big">VP</div><div class="impact-lbl">Visibilidade executiva</div><div class="impact-desc">Soluções apresentadas para lideranças executivas incluindo a Vice-Presidência da SAP Brasil.</div></div>
+      <div class="impact-card"><div class="impact-big">+</div><div class="impact-lbl">Mudança de escopo da área</div><div class="impact-desc">O impacto foi tão profundo que o time deixou de executar tarefas manuais para atuar de forma estratégica.</div></div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PROJECTS / AWARDS -->
+<section id="projects">
+  <div class="container">
+    <div class="fade-in">
+      <span class="eyebrow">Projetos & Premiações</span>
+      <h2 class="section-title">Construindo.<br/>Competindo. Vencendo.</h2>
+      <p class="section-intro">Hackathons, projetos acadêmicos e iniciativas que provam que o aprendizado vai muito além da sala de aula.</p>
+    </div>
+
+    <div class="awards-grid fade-in">
+      <div class="award-card">
+        <div class="award-img"><!-- <img src="fotos/cert-databricks-factset.jpg" alt="Certificado Databricks FactSet" /> --><div class="ph"><div class="ph-icon"><svg viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 7h8M8 11h8M8 15h5"/></svg></div><span>Certificado / foto hackathon</span></div></div>
+        <div class="award-body"><div class="award-place">1º Regional · 3º Nacional</div><div class="award-title">Hackathon IBMEC Tech — Databricks × FactSet</div><div class="award-evt">2026</div><div class="award-desc">Machine Learning, PCA, LDA, K-Means e séries temporais aplicados à identificação de mudanças de regime em indicadores econômicos.</div></div>
+      </div>
+      <div class="award-card">
+        <div class="award-img"><!-- <img src="fotos/cert-dermage.jpg" alt="Certificado Dermage" /> --><div class="ph"><div class="ph-icon"><svg viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 7h8M8 11h8M8 15h5"/></svg></div><span>Certificado / foto hackathon</span></div></div>
+        <div class="award-body"><div class="award-place">1º Regional · 3º Nacional</div><div class="award-title">Hackathon IBMEC × Dermage</div><div class="award-evt">2026</div><div class="award-desc">Análise de dados corporativos, segmentação e geração de insights estratégicos orientados por dados.</div></div>
+      </div>
+      <div class="award-card">
+        <div class="award-img"><!-- <img src="fotos/cert-app-financeiro.jpg" alt="Certificado App Financeiro" /> --><div class="ph"><div class="ph-icon"><svg viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 7h8M8 11h8M8 15h5"/></svg></div><span>Certificado / foto hackathon</span></div></div>
+        <div class="award-body"><div class="award-place">1º Regional</div><div class="award-title">Hackathon IBMEC Tech — App Financeiro</div><div class="award-evt">2025</div><div class="award-desc">Desenvolvimento de aplicativo de gestão financeira com IA, Java e React.</div></div>
+      </div>
+      <div class="award-card">
+        <div class="award-img"><!-- <img src="fotos/cert-ibmec-star.jpg" alt="IBMEC Star Award" /> --><div class="ph"><div class="ph-icon"><svg viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 7h8M8 11h8M8 15h5"/></svg></div><span>Foto cerimônia IBMEC Star</span></div></div>
+        <div class="award-body"><div class="award-place">IBMEC Star</div><div class="award-title">Academic Excellence Award</div><div class="award-evt">2024 · IBMEC SP</div><div class="award-desc">Primeira mulher do curso de Ciência de Dados e Inteligência Artificial a conquistar o prêmio de excelência acadêmica.</div></div>
+      </div>
+    </div>
+
+    <div class="projects-grid fade-in">
+      <div class="project-card">
+        <div class="project-img"><!-- <img src="fotos/proj-kyra.jpg" alt="Projeto Kyra" /> --><div class="ph"><div class="ph-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 9h6M9 12h6M9 15h4"/></svg></div><span>Screenshot / resultado Kyra</span></div></div>
+        <div class="project-body"><div class="project-num">Projeto · IBMEC SP</div><div class="project-title">Projeto Kyra — ML & NLP</div><div class="project-desc">Machine Learning e Processamento de Linguagem Natural aplicados a problemas empresariais reais — modelos preditivos, classificação e análise textual.</div><div class="project-tech"><span>Python</span><span>Scikit-learn</span><span>NLP</span><span>ML</span></div></div>
+      </div>
+      <div class="project-card">
+        <div class="project-img"><!-- <img src="fotos/proj-powerbi.jpg" alt="Dashboard Power BI" /> --><div class="ph"><div class="ph-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 9h6M9 12h6M9 15h4"/></svg></div><span>Screenshot dashboard</span></div></div>
+        <div class="project-body"><div class="project-num">Projeto · IBMEC SP</div><div class="project-title">Dashboards Executivos — Power BI</div><div class="project-desc">Desenvolvimento de dashboards interativos com DAX, Power Query, modelagem relacional e KPIs de negócio.</div><div class="project-tech"><span>Power BI</span><span>DAX</span><span>Power Query</span><span>SQL</span></div></div>
+      </div>
+      <div class="project-card">
+        <div class="project-img"><!-- <img src="fotos/proj-webapp.jpg" alt="Web App" /> --><div class="ph"><div class="ph-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 9h6M9 12h6M9 15h4"/></svg></div><span>Screenshot aplicação web</span></div></div>
+        <div class="project-body"><div class="project-num">Projeto · IBMEC SP</div><div class="project-title">Aplicações Web Full-Stack</div><div class="project-desc">Desenvolvimento de aplicações web e back-end com Flask, Spring Boot e integração com banco de dados relacional e cloud Azure.</div><div class="project-tech"><span>Flask</span><span>Spring Boot</span><span>Java</span><span>Azure</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CERTIFICATIONS -->
+<section class="certs-section">
+  <div class="container">
+    <div class="fade-in">
+      <span class="eyebrow">Certificações</span>
+      <h2 class="section-title">Formação<br/>contínua.</h2>
+      <p class="section-intro">Uma trilha de aprendizado em dados, IA, cloud e negócios.</p>
+    </div>
+    <div class="certs-grid fade-in">
+      <div class="cert-card"><div class="cert-icon"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div><div><div class="cert-name">SAP Learning / SAP BTP</div><div class="cert-org">SAP</div></div></div>
+      <div class="cert-card"><div class="cert-icon"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div><div><div class="cert-name">Databricks Academy</div><div class="cert-org">Databricks</div></div></div>
+      <div class="cert-card"><div class="cert-icon"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div><div><div class="cert-name">Data Engineering & Platforms</div><div class="cert-org">Formação acadêmica · IBMEC SP</div></div></div>
+      <div class="cert-card"><div class="cert-icon"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div><div><div class="cert-name">AI Engineering & LLMs</div><div class="cert-org">Formação acadêmica · IBMEC SP</div></div></div>
+      <div class="cert-card"><div class="cert-icon"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div><div><div class="cert-name">Platform Engineering</div><div class="cert-org">Formação acadêmica · IBMEC SP</div></div></div>
+      <div class="cert-card"><div class="cert-icon"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div><div><div class="cert-name">Microsoft Azure Fundamentals</div><div class="cert-org">Microsoft</div></div></div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="container">
+    <div class="fade-in">
+      <span class="eyebrow">Competências</span>
+      <h2 class="section-title">Stack que conecta<br/>análise, IA e negócio.</h2>
+      <p class="section-intro">Ferramentas e repertório organizados por camada, do dado bruto à decisão de negócio.</p>
+    </div>
+    <div class="skills-grid fade-in">
+      <div class="skill-group">
+        <div class="skill-group-title">Programação & Dados</div>
+        <div class="skill-tags">
+          <span class="stag hi">Python</span><span class="stag hi">SQL</span>
+          <span class="stag">Pandas</span><span class="stag">NumPy</span><span class="stag">PySpark</span><span class="stag">ETL/ELT</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-title">IA & Machine Learning</div>
+        <div class="skill-tags">
+          <span class="stag hi">LangChain</span><span class="stag hi">IA Generativa</span>
+          <span class="stag">Scikit-learn</span><span class="stag">NLP</span><span class="stag">Clustering</span><span class="stag">Séries Temporais</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-title">Plataformas & Cloud</div>
+        <div class="skill-tags">
+          <span class="stag hi">SAP BTP</span><span class="stag hi">SAP AI Core</span>
+          <span class="stag">Databricks</span><span class="stag">Azure</span><span class="stag">SAP Datasphere</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-title">APIs & Integração</div>
+        <div class="skill-tags">
+          <span class="stag hi">APIs REST</span><span class="stag hi">SOAP/Web Services</span>
+          <span class="stag">FastAPI</span><span class="stag">Web Scraping</span><span class="stag">Dados Abertos</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-title">Business Intelligence</div>
+        <div class="skill-tags">
+          <span class="stag hi">Power BI</span><span class="stag">DAX</span><span class="stag">Power Query</span><span class="stag">Excel Avançado</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-title">Desenvolvimento</div>
+        <div class="skill-tags">
+          <span class="stag">Java</span><span class="stag">Spring Boot</span><span class="stag">Flask</span>
+          <span class="stag">React</span><span class="stag">Git/GitHub</span><span class="stag">HTML/CSS</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ABOUT / CONTACT -->
+<section id="contact">
+  <div class="container">
+    <div class="about-grid fade-in">
+      <div>
+        <span class="eyebrow">Sobre</span>
+        <h2 class="section-title">A história não<br/>terminou aqui.</h2>
+        <div class="about-photos">
+          <div class="about-pf about-pf-tall"><!-- <img src="fotos/sobre-principal.jpg" alt="Juliane Oliveira" /> --><div class="ph"><div class="ph-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></div><span>Foto principal<br/>3:4</span></div></div>
+          <div class="about-pf about-pf-sq"><!-- <img src="fotos/sobre-sap.jpg" alt="SAP" /> --><div class="ph"><div class="ph-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg></div><span>No trabalho</span></div></div>
+          <div class="about-pf about-pf-sq"><!-- <img src="fotos/sobre-ibmec.jpg" alt="IBMEC" /> --><div class="ph"><div class="ph-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg></div><span>IBMEC</span></div></div>
+        </div>
+        <div class="about-text">
+          <p>Sou estudante de <strong>Ciência de Dados e Inteligência Artificial no IBMEC SP</strong> (conclusão Jun/2027), atualmente intern na <strong>SAP como Customer Data Intelligence</strong>.</p>
+          <p>Antes da tecnologia, passei por advocacia e gestão de franquia. Essa trajetória me deu algo que nenhum curso ensina: <strong>a perspectiva de quem viu problemas reais e entendeu que tecnologia é meio, não fim.</strong></p>
+          <p>Fluente em <strong>Inglês</strong> (avançado) e comunicativa em <strong>Espanhol</strong> (intermediário). Foco atual: Engenharia de Dados, Produtos de IA e soluções escaláveis para problemas de negócio.</p>
+        </div>
+      </div>
+      <div>
+        <span class="eyebrow">Contato</span>
+        <h2 class="section-title">Vamos<br/>conversar.</h2>
+        <div class="contact-links">
+          <a href="mailto:julianeoliveira005@gmail.com" class="contact-item">
+            <div class="contact-icon-box"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 7 10-7"/></svg></div>
+            <div><div class="contact-lbl">E-mail</div><div class="contact-val">julianeoliveira005@gmail.com</div></div>
+          </a>
+          <a href="https://www.linkedin.com/in/juliane-oliveira-bb3363241/" target="_blank" rel="noopener" class="contact-item">
+            <div class="contact-icon-box"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="4"/><path d="M7 10v7M7 7v.01M12 17v-4a2 2 0 0 1 4 0v4M12 10v7"/></svg></div>
+            <div><div class="contact-lbl">LinkedIn</div><div class="contact-val">juliane-oliveira-bb3363241</div></div>
+          </a>
+          <div class="contact-item">
+            <div class="contact-icon-box"><svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg></div>
+            <div><div class="contact-lbl">Localização</div><div class="contact-val">Granja Viana, Cotia / SP</div></div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon-box"><svg viewBox="0 0 24 24"><path d="M6.6 10.8a15.05 15.05 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.6 1 1 0 0 1 1 1v3.5a1 1 0 0 1-1 1A17 17 0 0 1 3 5a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1 11.4 11.4 0 0 0 .6 3.6 1 1 0 0 1-.25 1z"/></svg></div>
+            <div><div class="contact-lbl">Telefone</div><div class="contact-val">(11) 99268-4820</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>Juliane de Assis Pirozelli Oliveira &nbsp;·&nbsp; Ciência de Dados & IA &nbsp;·&nbsp; IBMEC SP &nbsp;·&nbsp; <strong>SAP</strong></p>
+  <p class="footer-sub">Dados, determinação e muito Python.</p>
+  <p class="footer-back"><a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;" class="footer-back-link">Voltar ao início</a></p>
+</footer>
+
+<!-- BACK TO TOP -->
+<button type="button" id="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Voltar ao início">
+  <svg viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
+
+<script>
+  // ── FLOWER LOADER ──
+  (function() {
+    const loader  = document.getElementById('flower-loader');
+    const canvas  = document.getElementById('flower-canvas');
+    const dotsEl  = document.getElementById('flower-dots');
+    const mainCtx = canvas.getContext('2d');
+
+    // Main canvas: 224px display
+    const DISP = 224;
+    const DPR  = window.devicePixelRatio || 1;
+    canvas.width  = DISP * DPR;
+    canvas.height = DISP * DPR;
+    canvas.style.width  = DISP + 'px';
+    canvas.style.height = DISP + 'px';
+    mainCtx.scale(DPR, DPR);
+
+    // Low-res offscreen canvas — drawn at 32×32, then scaled 7×
+    // This gives the pixel-art look while keeping real petal shapes
+    const RES = 32;
+    const off = document.createElement('canvas');
+    off.width = off.height = RES;
+    const ctx = off.getContext('2d');
+
+    const CX = RES / 2;  // 16
+    const CY = RES / 2;  // 16
+    const N  = 6;        // petals
+
+    // Petal geometry (in low-res units)
+    const P_DIST = 3.2;   // center → petal base
+    const P_LEN  = 8.0;   // base → tip
+    const P_WID  = 4.2;   // max petal width
+    const C_RAD  = 3.8;   // centre circle radius
+
+    // timing
+    const PETAL_DUR = 380;
+    const PETAL_GAP = 55;
+    const HOLD_MS   = 700;
+
+    // Draw one petal at progress t (0→1 = base to tip)
+    function drawPetal(angle, t) {
+      if (t <= 0) return;
+      t = Math.min(t, 1);
+
+      ctx.save();
+      ctx.translate(CX, CY);
+      ctx.rotate(angle);
+
+      const baseY = -P_DIST;
+      const tipY  = -(P_DIST + P_LEN);
+
+      // Full rounded petal bezier (pointing in -Y direction)
+      const petal = new Path2D();
+      petal.moveTo(-P_WID * 0.13, baseY + 0.4);
+      petal.bezierCurveTo(
+        -P_WID * 0.72, baseY - P_LEN * 0.32,
+        -P_WID * 0.58, tipY  + P_LEN * 0.22,
+        0, tipY
+      );
+      petal.bezierCurveTo(
+        P_WID * 0.58, tipY  + P_LEN * 0.22,
+        P_WID * 0.72, baseY - P_LEN * 0.32,
+        P_WID * 0.13, baseY + 0.4
+      );
+      petal.closePath();
+
+      // Clip: reveal petal from base toward tip as t grows
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(
+        -(P_WID + 1),
+        baseY - P_LEN * t - 0.5,
+        (P_WID + 1) * 2,
+        P_LEN * t + P_DIST + 1
+      );
+      ctx.clip();
+
+      // Main pink fill
+      ctx.fillStyle = '#f472a0';
+      ctx.fill(petal);
+
+      // Light highlight (upper-left of petal)
+      ctx.save();
+      ctx.clip(petal);
+      const hl = ctx.createRadialGradient(
+        -P_WID * 0.22, baseY - P_LEN * 0.38, 0,
+        -P_WID * 0.1,  baseY - P_LEN * 0.5,  P_WID * 0.85
+      );
+      hl.addColorStop(0, 'rgba(255,200,225,0.75)');
+      hl.addColorStop(1, 'rgba(255,200,225,0)');
+      ctx.fillStyle = hl;
+      ctx.fill(petal);
+      ctx.restore();
+
+      // Dark shadow (lower-right)
+      ctx.save();
+      ctx.clip(petal);
+      const sh = ctx.createRadialGradient(
+        P_WID * 0.28, baseY - P_LEN * 0.18, 0,
+        P_WID * 0.28, baseY - P_LEN * 0.18, P_WID * 0.9
+      );
+      sh.addColorStop(0, 'rgba(160,30,80,0.38)');
+      sh.addColorStop(1, 'rgba(160,30,80,0)');
+      ctx.fillStyle = sh;
+      ctx.fill(petal);
+      ctx.restore();
+
+      // Black outline
+      ctx.strokeStyle = '#1a1a1a';
+      ctx.lineWidth = 0.85;
+      ctx.stroke(petal);
+
+      ctx.restore(); // clip
+      ctx.restore(); // transform
+    }
+
+    function drawCenter(t) {
+      if (t <= 0) return;
+      t = Math.min(t, 1);
+      const r = C_RAD * t;
+
+      // Black ring
+      ctx.beginPath();
+      ctx.arc(CX, CY, r + 0.9, 0, Math.PI * 2);
+      ctx.fillStyle = '#1a1a1a';
+      ctx.fill();
+
+      // Yellow fill
+      ctx.beginPath();
+      ctx.arc(CX, CY, r, 0, Math.PI * 2);
+      ctx.fillStyle = '#ffd93d';
+      ctx.fill();
+
+      // Inner golden shadow
+      ctx.beginPath();
+      ctx.arc(CX + r * 0.18, CY + r * 0.18, r * 0.55, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(190,130,0,0.28)';
+      ctx.fill();
+
+      // White highlight dot
+      ctx.beginPath();
+      ctx.arc(CX - r * 0.28, CY - r * 0.28, r * 0.3, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(255,255,255,0.65)';
+      ctx.fill();
+    }
+
+    let startTime = null;
+    let doneTime  = null;
+
+    function t(elapsed, i) {
+      return (elapsed - i * (PETAL_DUR + PETAL_GAP)) / PETAL_DUR;
+    }
+
+    function frame(ts) {
+      if (!startTime) startTime = ts;
+      const elapsed = ts - startTime;
+
+      // Draw everything on low-res canvas
+      ctx.clearRect(0, 0, RES, RES);
+
+      for (let i = 0; i < N; i++) {
+        const angle = (i / N) * Math.PI * 2 - Math.PI / 2;
+        drawPetal(angle, t(elapsed, i));
+      }
+
+      // Centre appears when 4th petal is drawing
+      drawCenter(t(elapsed, 3.5) * 1.8);
+
+      // Upscale to main canvas with NO smoothing → pixel art look
+      mainCtx.clearRect(0, 0, DISP, DISP);
+      mainCtx.imageSmoothingEnabled = false;
+      mainCtx.drawImage(off, 0, 0, RES, RES, 0, 0, DISP, DISP);
+
+      dotsEl.textContent = '.'.repeat(Math.floor(elapsed / 380) % 4);
+
+      const done = elapsed >= (N - 1) * (PETAL_DUR + PETAL_GAP) + PETAL_DUR + 200;
+      if (!done || doneTime === null) {
+        if (done && doneTime === null) doneTime = ts;
+        requestAnimationFrame(frame);
+        return;
+      }
+      if (ts - doneTime < HOLD_MS) { requestAnimationFrame(frame); return; }
+
+      loader.classList.add('done');
+      setTimeout(() => { loader.style.display = 'none'; }, 750);
+    }
+
+    requestAnimationFrame(frame);
+  })();
+
+  // ── SCROLL PROGRESS BAR ──
+  const bar = document.getElementById('scroll-bar');
+  window.addEventListener('scroll', () => {
+    const pct = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight) * 100;
+    bar.style.width = pct + '%';
+  }, { passive: true });
+
+  // Back to top button
+  const backTop = document.getElementById('back-top');
+  window.addEventListener('scroll', () => {
+    backTop.classList.toggle('show', window.scrollY > 500);
+  }, { passive: true });
+
+  // Fade-in on scroll
+  const observer = new IntersectionObserver(
+    entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),
+    { threshold: 0.06, rootMargin: '0px 0px -40px 0px' }
+  );
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+  // Animated stat counters
+  const counters = document.querySelectorAll('.stat-number[data-count]');
+  const countObserver = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      const el = e.target;
+      const target = parseInt(el.dataset.count);
+      const suffix = el.dataset.suffix || '';
+      const duration = 1400;
+      const step = target / (duration / 16);
+      let current = 0;
+      const timer = setInterval(() => {
+        current = Math.min(current + step, target);
+        el.textContent = Math.floor(current) + suffix;
+        if (current >= target) clearInterval(timer);
+      }, 16);
+      countObserver.unobserve(el);
+    });
+  }, { threshold: 0.5 });
+  counters.forEach(el => countObserver.observe(el));
+</script>
+
+</body>
+</html>
