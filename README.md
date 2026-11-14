@@ -35,3 +35,8 @@ Para usar um domínio próprio (ex: `julianeoliveira.com`):
 1. Compre o domínio (Registro.br, GoDaddy, etc.)
 2. Em Settings → Pages → Custom domain, insira o domínio
 3. Configure o DNS do domínio apontando para o GitHub Pages
+
+## Idiomas (PT / EN / ES)
+O site tem seletor de idioma no menu superior. O texto em português fica no próprio `index.html`;
+as traduções para inglês e espanhol ficam em `i18n.js` (mesma chave `data-i18n` do HTML).
+Também é possível abrir direto em um idioma: `?lang=en`, `?lang=es` ou `?lang=pt`.
