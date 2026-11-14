@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Juliane Oliveira — Data & AI</title>
+  <title>Juliane Oliveira — AI Engineer · Data & AI</title>
+  <meta name="description" content="Portfólio de Juliane Oliveira: AI Engineer na Infosys (CoE Brasil), ex-SAP Customer Data Intelligence e estudante de Ciência de Dados e IA no IBMEC SP." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet" />
@@ -418,7 +419,7 @@
       .story-photo-col { position: static; }
     }
     @media (max-width: 860px) {
-      nav { padding: 0 1.5rem; }
+      nav { padding: 0 1rem 0 1.5rem; }
       .nav-links { display: none; }
       .hero { grid-template-columns: 1fr; padding: 7rem 1.5rem 4rem; gap: 3rem; }
       .hero-photo-wrap { max-width: 320px; margin: 0 auto; }
@@ -433,6 +434,42 @@
       .proj-screenshots-grid.layout-3,
       .proj-screenshots-grid.layout-2-1 { grid-template-columns: 1fr; }
     }
+
+    /* ── LANGUAGE SWITCH ── */
+    .nav-right { display: flex; align-items: center; gap: 2rem; }
+    .lang-switch {
+      display: inline-flex; gap: 2px; padding: 3px;
+      background: var(--bg-alt); border: 1px solid var(--border); border-radius: var(--radius-pill);
+    }
+    .lang-switch button {
+      border: 0; background: transparent; cursor: pointer;
+      font-family: inherit; font-size: 0.68rem; font-weight: 600; letter-spacing: 0.06em;
+      color: var(--text-dim); padding: 0.28rem 0.62rem; border-radius: var(--radius-pill);
+      transition: color 0.2s, background 0.2s, box-shadow 0.2s;
+    }
+    .lang-switch button:hover { color: var(--rose); }
+    .lang-switch button.active { background: var(--surface); color: var(--rose); box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+    .lang-switch button:focus-visible { outline: 2px solid var(--rose); outline-offset: 1px; }
+
+    /* ── GROUP LABELS (awards / certs) ── */
+    .group-label {
+      font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.14em; color: var(--rose); margin-bottom: 1.25rem;
+    }
+    .awards-grid + .group-label, .certs-grid + .group-label { margin-top: 1rem; }
+    .certs-grid { margin-bottom: 2.5rem; }
+    .certs-grid:last-child { margin-bottom: 0; }
+
+    /* Text-only award cards (no photo) */
+    .award-card.text-only { position: relative; }
+    .award-card.text-only::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, var(--rose-dark), var(--rose));
+    }
+    .award-card.text-only .award-body { padding-top: 2.1rem; }
+
+    /* Second feature card (Infosys) */
+    .impact-grid + .feature-card, .screenshots-section + .feature-card { margin-top: 1rem; }
   </style>
 </head>
 <body>
@@ -442,20 +479,27 @@
 <!-- FLOWER LOADER -->
 <div id="flower-loader">
   <canvas id="flower-canvas"></canvas>
-  <div id="flower-tagline">carregando sua história<span id="flower-dots"></span></div>
+  <div id="flower-tagline"><span data-i18n="loader">carregando sua história</span><span id="flower-dots"></span></div>
 </div>
 
 <!-- NAV -->
 <nav>
   <div class="nav-logo">Juliane <span>Oliveira</span></div>
-  <ul class="nav-links">
-    <li><a href="#story">Trajetória</a></li>
-    <li><a href="#mindset">Mindset</a></li>
-    <li><a href="#impact">Impacto</a></li>
-    <li><a href="#projects">Projetos</a></li>
-    <li><a href="#skills">Skills</a></li>
-    <li><a href="#contact">Contato</a></li>
-  </ul>
+  <div class="nav-right">
+    <ul class="nav-links">
+      <li><a href="#story" data-i18n="nav.story">Trajetória</a></li>
+      <li><a href="#mindset" data-i18n="nav.mindset">Mindset</a></li>
+      <li><a href="#impact" data-i18n="nav.impact">Impacto</a></li>
+      <li><a href="#projects" data-i18n="nav.projects">Projetos</a></li>
+      <li><a href="#skills" data-i18n="nav.skills">Skills</a></li>
+      <li><a href="#contact" data-i18n="nav.contact">Contato</a></li>
+    </ul>
+    <div class="lang-switch" role="group" aria-label="Idioma / Language / Idioma">
+      <button type="button" data-lang="pt" aria-pressed="true" title="Português">PT</button>
+      <button type="button" data-lang="en" aria-pressed="false" title="English">EN</button>
+      <button type="button" data-lang="es" aria-pressed="false" title="Español">ES</button>
+    </div>
+  </div>
 </nav>
 
 <!-- HERO -->
@@ -463,33 +507,34 @@
   <div class="hero-glow"></div>
   <div class="hero-content fade-in">
     <div class="hero-badges">
-      <span class="pill accent"><span class="pill-dot"></span>Disponível para oportunidades</span>
-      <span class="pill">SAP iXp Intern</span>
+      <span class="pill accent"><span class="pill-dot"></span><span data-i18n="hero.available">Disponível para oportunidades</span></span>
+      <span class="pill">AI Engineer · Infosys</span>
+      <span class="pill" data-i18n="hero.exsap">Ex-SAP iXp</span>
       <span class="pill">IBMEC SP</span>
       <span class="pill">Data & AI</span>
     </div>
-    <h1>Transformando<br/>dados em <span class="accent">impacto</span><br/>real.</h1>
-    <p class="hero-sub">De uma área completamente diferente para o coração da inovação em uma das maiores empresas de tecnologia do mundo.</p>
+    <h1 data-i18n="hero.title">Transformando<br/>dados em <span class="accent">impacto</span><br/>real.</h1>
+    <p class="hero-sub" data-i18n="hero.sub">De uma área completamente diferente ao coração da inovação: hoje sou AI Engineer na Infosys (CoE Brasil), depois de quase 2 anos construindo soluções de dados e IA na SAP.</p>
     <div class="hero-actions">
-      <a href="#story" class="btn-rose">Conheça minha história</a>
-      <a href="#contact" class="btn-ghost">Entre em contato</a>
+      <a href="#story" class="btn-rose" data-i18n="hero.cta1">Conheça minha história</a>
+      <a href="#contact" class="btn-ghost" data-i18n="hero.cta2">Entre em contato</a>
     </div>
     <div class="hero-stats">
       <div class="stat">
         <span class="stat-number" data-count="60" data-suffix="k">0k</span>
-        <span class="stat-label">Empresas validadas</span>
+        <span class="stat-label" data-i18n="stat.validated">Empresas validadas</span>
       </div>
       <div class="stat">
         <span class="stat-number" data-count="5" data-suffix="k+">0k+</span>
-        <span class="stat-label">CNPJs inativos identificados</span>
+        <span class="stat-label" data-i18n="stat.inactive">CNPJs inativos identificados</span>
       </div>
       <div class="stat">
         <span class="stat-number" data-count="800" data-suffix="k">0k</span>
-        <span class="stat-label">Empresas analisadas</span>
+        <span class="stat-label" data-i18n="stat.analyzed">Empresas analisadas</span>
       </div>
       <div class="stat">
         <span class="stat-number" data-count="6" data-suffix="">0</span>
-        <span class="stat-label">Países — LATAM</span>
+        <span class="stat-label" data-i18n="stat.countries">Países — LATAM</span>
       </div>
     </div>
   </div>
@@ -518,9 +563,9 @@
 <section id="story">
   <div class="container">
     <div class="fade-in">
-      <span class="eyebrow">Trajetória</span>
-      <h2 class="section-title">Uma jornada de<br/>transformação.</h2>
-      <p class="section-intro">Esta não é uma história sobre tecnologia. É sobre coragem, curiosidade e minha capacidade de construir um caminho onde ele ainda não existia.</p>
+      <span class="eyebrow" data-i18n="story.eyebrow">Trajetória</span>
+      <h2 class="section-title" data-i18n="story.title">Uma jornada de<br/>transformação.</h2>
+      <p class="section-intro" data-i18n="story.intro">Esta não é uma história sobre tecnologia. É sobre coragem, curiosidade e minha capacidade de construir um caminho onde ele ainda não existia.</p>
     </div>
 
     <div class="story-layout">
@@ -535,11 +580,11 @@
             <div class="ph"><div class="ph-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg></div><span>assets/5.jpeg</span></div>
           </div>
           <div class="pf-stack-item tall">
-            <img src="assets/6.jpeg" alt="Apresentação SAP" onerror="this.style.display='none'" />
+            <img src="assets/6.jpeg" alt="SAP" onerror="this.style.display='none'" />
             <div class="ph"><div class="ph-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg></div><span>assets/6.jpeg</span></div>
           </div>
         </div>
-        <p class="pf-cap">SAP iXp Intern · Customer Data Intelligence · Jan 2025 – Atual</p>
+        <p class="pf-cap" data-i18n="story.cap">SAP iXp Intern · Customer Data Intelligence · Jan 2025 – Set 2026<br/>Infosys · AI Engineer, CoE Brasil · Out 2026 – Atual</p>
       </div>
 
       <div class="timeline fade-in">
@@ -547,32 +592,32 @@
         <div class="timeline-item">
           <div class="timeline-dot"></div>
           <div class="timeline-num">01</div>
-          <div class="timeline-chapter">O início</div>
-          <div class="timeline-heading">Escritório de advocacia — os primeiros fundamentos</div>
-          <p class="timeline-text">Antes da tecnologia, meu primeiro contato com o mundo corporativo me ensinou organização, disciplina e atenção aos detalhes. Mas minha percepção era clara: meu futuro estaria mais perto da inovação e da construção de soluções.</p>
+          <div class="timeline-chapter" data-i18n="tl1.chapter">O início</div>
+          <div class="timeline-heading" data-i18n="tl1.heading">Escritório de advocacia — os primeiros fundamentos</div>
+          <p class="timeline-text" data-i18n="tl1.text">Antes da tecnologia, meu primeiro contato com o mundo corporativo me ensinou organização, disciplina e atenção aos detalhes. Mas minha percepção era clara: meu futuro estaria mais perto da inovação e da construção de soluções.</p>
         </div>
 
         <div class="timeline-item">
           <div class="timeline-dot"></div>
           <div class="timeline-num">02</div>
-          <div class="timeline-chapter">Liderança operacional</div>
-          <div class="timeline-heading">Pet Móvel — gestão real e aprendizados humanos</div>
-          <p class="timeline-text">Na administração de uma franquia de Pet Móvel, minha responsabilidade era total: gestão operacional, equipe, agenda e atendimento ao cliente. Foi aí que minha convicção se formou — tecnologia só gera valor quando resolve problemas reais das pessoas.</p>
+          <div class="timeline-chapter" data-i18n="tl2.chapter">Liderança operacional</div>
+          <div class="timeline-heading" data-i18n="tl2.heading">Pet Móvel — gestão real e aprendizados humanos</div>
+          <p class="timeline-text" data-i18n="tl2.text">Na administração de uma franquia de Pet Móvel, minha responsabilidade era total: gestão operacional, equipe, agenda e atendimento ao cliente. Foi aí que minha convicção se formou — tecnologia só gera valor quando resolve problemas reais das pessoas.</p>
         </div>
 
         <div class="timeline-item">
           <div class="timeline-dot"></div>
           <div class="timeline-num">03</div>
-          <div class="timeline-chapter">A grande virada</div>
-          <div class="timeline-heading">IBMEC SP — a decisão que mudou tudo</div>
-          <p class="timeline-text">Descobri um curso ainda raro no Brasil: Ciência de Dados e Inteligência Artificial. A intersecção perfeita entre negócios, tecnologia e inovação. Decidi mudar completamente de carreira e ingressei no IBMEC São Paulo.</p>
+          <div class="timeline-chapter" data-i18n="tl3.chapter">A grande virada</div>
+          <div class="timeline-heading" data-i18n="tl3.heading">IBMEC SP — a decisão que mudou tudo</div>
+          <p class="timeline-text" data-i18n="tl3.text">Descobri um curso ainda raro no Brasil: Ciência de Dados e Inteligência Artificial. A intersecção perfeita entre negócios, tecnologia e inovação. Decidi mudar completamente de carreira e ingressei no IBMEC São Paulo.</p>
           <div class="timeline-photos">
             <div class="tph tph-wide">
               <img src="assets/7.jpeg" alt="IBMEC SP" onerror="this.style.display='none'" />
               <div class="ph"><span>assets/7.jpeg</span></div>
             </div>
             <div class="tph tph-sq">
-              <img src="assets/8.jpeg" alt="Sala de aula" onerror="this.style.display='none'" />
+              <img src="assets/8.jpeg" alt="IBMEC SP" onerror="this.style.display='none'" />
               <div class="ph"><span>assets/8.jpeg</span></div>
             </div>
           </div>
@@ -581,20 +626,20 @@
         <div class="timeline-item">
           <div class="timeline-dot"></div>
           <div class="timeline-num">04</div>
-          <div class="timeline-chapter">Protagonismo acadêmico</div>
-          <div class="timeline-heading">IBMEC Star — a primeira mulher do curso</div>
-          <p class="timeline-text">Assumi a Diretoria de Eventos, organizando encontros com executivos da Coca-Cola, Johnson & Johnson e grandes líderes do mercado. Em 2024, conquistei o prêmio IBMEC Star — tornando-me a primeira mulher do curso de Ciência de Dados e IA a receber a premiação por excelência acadêmica.</p>
+          <div class="timeline-chapter" data-i18n="tl4.chapter">Protagonismo acadêmico</div>
+          <div class="timeline-heading" data-i18n="tl4.heading">IBMEC Star — a primeira mulher do curso</div>
+          <p class="timeline-text" data-i18n="tl4.text">Assumi a Diretoria de Eventos, organizando encontros com executivos da Coca-Cola, Johnson & Johnson e grandes líderes do mercado. Em 2024, conquistei o prêmio IBMEC Star — tornando-me a primeira mulher do curso de Ciência de Dados e IA a receber a premiação por excelência acadêmica. Em 2026.1, recebi o prêmio pela segunda vez.</p>
           <div class="timeline-photos">
             <div class="tph tph-tall">
               <img src="assets/9.jpeg" alt="IBMEC Star" onerror="this.style.display='none'" />
               <div class="ph"><span>assets/9.jpeg</span></div>
             </div>
             <div class="tph tph-wide">
-              <img src="assets/10.jpeg" alt="Evento IBMEC" onerror="this.style.display='none'" />
+              <img src="assets/10.jpeg" alt="IBMEC" onerror="this.style.display='none'" />
               <div class="ph"><span>assets/10.jpeg</span></div>
             </div>
             <div class="tph tph-sq">
-              <img src="assets/11.jpeg" alt="Diretoria de Eventos" onerror="this.style.display='none'" />
+              <img src="assets/11.jpeg" alt="IBMEC" onerror="this.style.display='none'" />
               <div class="ph"><span>assets/11.jpeg</span></div>
             </div>
             <div class="tph tph-sq">
@@ -607,19 +652,27 @@
         <div class="timeline-item">
           <div class="timeline-dot"></div>
           <div class="timeline-num">05</div>
-          <div class="timeline-chapter">SAP · Janeiro 2025</div>
-          <div class="timeline-heading">SAP iXp — Customer Data Intelligence</div>
-          <p class="timeline-text">Ingressei na SAP como Sales Development Executive e logo fui transferida para a área de Data Research. O que começou como validação manual de registros se tornaria a maior iniciativa de inteligência de dados da área — ainda como estudante, antes de concluir a graduação.</p>
+          <div class="timeline-chapter" data-i18n="tl5.chapter">SAP · Janeiro 2025 – Setembro 2026</div>
+          <div class="timeline-heading" data-i18n="tl5.heading">SAP iXp — Customer Data Intelligence</div>
+          <p class="timeline-text" data-i18n="tl5.text">Ingressei na SAP como Sales Development Executive e logo fui transferida para a área de Data Research. Em quase 2 anos, meu papel evoluiu do suporte tático à área de vendas para a construção das minhas próprias soluções de dados e IA, que passaram a sustentar a operação do time em toda a América Latina — ainda como estudante, antes de concluir a graduação.</p>
           <div class="timeline-photos">
             <div class="tph tph-wide">
-              <img src="assets/12.jpeg" alt="SAP escritório" onerror="this.style.display='none'" />
+              <img src="assets/12.jpeg" alt="SAP" onerror="this.style.display='none'" />
               <div class="ph"><span>assets/12.jpeg</span></div>
             </div>
             <div class="tph tph-sq">
-              <img src="assets/13.jpeg" alt="Crachá SAP" onerror="this.style.display='none'" />
+              <img src="assets/13.jpeg" alt="SAP" onerror="this.style.display='none'" />
               <div class="ph"><span>assets/13.jpeg</span></div>
             </div>
           </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-num">06</div>
+          <div class="timeline-chapter" data-i18n="tl6.chapter">Infosys · Outubro 2026 – Atual</div>
+          <div class="timeline-heading" data-i18n="tl6.heading">AI Engineer — CoE Brasil</div>
+          <p class="timeline-text" data-i18n="tl6.text">Hoje sou AI Engineer no Centro de Excelência (CoE) da Infosys no Brasil. Projeto e construo soluções com IA — de LLMs aplicados a workflows multiagente — para clientes e operações internas, usando ferramentas de engenharia assistida por IA como Claude, Codex e GitHub Copilot para acelerar a prototipação, o desenvolvimento e a entrega.</p>
         </div>
 
       </div>
@@ -634,29 +687,29 @@
   <div class="container">
     <div class="fade-in">
       <span class="eyebrow">Mindset</span>
-      <h2 class="section-title">O que move<br/>minha trajetória.</h2>
-      <p class="section-intro">Não é só o que sei fazer — é como penso, o que acredito e como me comporto diante dos problemas.</p>
+      <h2 class="section-title" data-i18n="mind.title">O que move<br/>minha trajetória.</h2>
+      <p class="section-intro" data-i18n="mind.intro">Não é só o que sei fazer — é como penso, o que acredito e como me comporto diante dos problemas.</p>
     </div>
     <div class="mindset-grid fade-in">
       <div class="mindset-card">
         <div class="mindset-number">01</div>
-        <div class="mindset-title">Resiliência</div>
-        <div class="mindset-body">Quando assumo um compromisso, vou até o fim. Quando encontro um problema, procuro a solução. Quando não existe um caminho, construo um.</div>
+        <div class="mindset-title" data-i18n="mind1.title">Resiliência</div>
+        <div class="mindset-body" data-i18n="mind1.body">Quando assumo um compromisso, vou até o fim. Quando encontro um problema, procuro a solução. Quando não existe um caminho, construo um.</div>
       </div>
       <div class="mindset-card">
         <div class="mindset-number">02</div>
-        <div class="mindset-title">Curiosidade</div>
-        <div class="mindset-body">Grande parte das minhas conquistas surgiram porque questionei processos existentes. A pergunta que me guia: "Existe uma forma melhor de fazer isso?"</div>
+        <div class="mindset-title" data-i18n="mind2.title">Curiosidade</div>
+        <div class="mindset-body" data-i18n="mind2.body">Grande parte das minhas conquistas surgiram porque questionei processos existentes. A pergunta que me guia: "Existe uma forma melhor de fazer isso?"</div>
       </div>
       <div class="mindset-card">
         <div class="mindset-number">03</div>
-        <div class="mindset-title">Coragem</div>
-        <div class="mindset-body">Mudei completamente de carreira. Saí de uma área tradicional para uma extremamente nova. Assumi riscos, aprendi tecnologias complexas, construí soluções sem que pedissem.</div>
+        <div class="mindset-title" data-i18n="mind3.title">Coragem</div>
+        <div class="mindset-body" data-i18n="mind3.body">Mudei completamente de carreira. Saí de uma área tradicional para uma extremamente nova. Assumi riscos, aprendi tecnologias complexas, construí soluções sem que pedissem.</div>
       </div>
       <div class="mindset-card">
         <div class="mindset-number">04</div>
-        <div class="mindset-title">Diligência</div>
-        <div class="mindset-body">Cumpro o que prometo. Entrego resultados. Executo com qualidade. Tenho senso de dono sobre o trabalho que assino.</div>
+        <div class="mindset-title" data-i18n="mind4.title">Diligência</div>
+        <div class="mindset-body" data-i18n="mind4.body">Cumpro o que prometo. Entrego resultados. Executo com qualidade. Tenho senso de dono sobre o trabalho que assino.</div>
       </div>
     </div>
   </div>
@@ -668,114 +721,118 @@
 <section id="impact">
   <div class="container">
     <div class="fade-in">
-      <span class="eyebrow">Impacto</span>
-      <h2 class="section-title">Números que<br/>falam por si.</h2>
-      <p class="section-intro">Impacto não é intenção — é resultado. Cada número representa um problema real que resolvi.</p>
+      <span class="eyebrow" data-i18n="imp.eyebrow">Impacto</span>
+      <h2 class="section-title" data-i18n="imp.title">Números que<br/>falam por si.</h2>
+      <p class="section-intro" data-i18n="imp.intro">Impacto não é intenção — é resultado. Cada número representa um problema real que resolvi.</p>
     </div>
 
     <div class="feature-card fade-in">
       <div>
-        <span class="eyebrow">Projeto principal</span>
+        <span class="eyebrow" data-i18n="aie.eyebrow">Projeto principal · SAP</span>
         <h3>Account Intelligence Engine</h3>
-        <p>Plataforma interna de inteligência de contas que desenvolvi do zero. Conecta automação, APIs governamentais de 6 países, CRM, dados públicos e privados — transformando completamente o processo de enriquecimento de dados da área.</p>
+        <p data-i18n="aie.p1">O trabalho manual, conta por conta, revelou o verdadeiro gargalo do time — e me levou a propor e liderar a criação do Account Intelligence Engine: uma plataforma que conecta automação, APIs, análise de dados, CRM e estratégia de vendas, com integrações dedicadas para 6 países — Brasil, Argentina, Chile, Colômbia, Peru e Equador.</p>
+        <p data-i18n="aie.p2">Desenvolvi pipelines em Python para integrar, consultar e enriquecer dados de fontes públicas e privadas — CNPJ/Receita Federal, ARCA/AFIP (SOAP Web Services), Datos Abiertos Colombia via Socrata SODA API, RUC/SUNAT, Serper e SearchAPI — automatizando coleta, normalização, matching e enriquecimento de contas, com insights como atividade econômica, porte, endereço, situação cadastral, faturamento estimado, sócios, sites e sinais de mercado. Também apliquei Machine Learning, NLP, análise preditiva e segmentação em pilotos para priorizar e qualificar empresas para os times de vendas.</p>
         <div class="tag-row">
           <span class="tag">Python</span>
           <span class="tag">SAP BTP</span>
           <span class="tag">SAP AI Core</span>
+          <span class="tag">SAP Datasphere</span>
+          <span class="tag">SAP UI5/Fiori</span>
           <span class="tag">Databricks</span>
           <span class="tag">LangChain</span>
+          <span class="tag">LangGraph</span>
           <span class="tag">SQL</span>
           <span class="tag">APIs REST/SOAP</span>
         </div>
       </div>
       <div class="metrics-col">
-        <div class="metric-card"><div class="metric-num">60k</div><div class="metric-label">empresas validadas em ~5 dias (antes: meses)</div></div>
-        <div class="metric-card"><div class="metric-num">5k+</div><div class="metric-label">CNPJs inativos identificados</div></div>
-        <div class="metric-card"><div class="metric-num">800k</div><div class="metric-label">empresas analisadas para expansão comercial</div></div>
-        <div class="metric-card"><div class="metric-num">6 países</div><div class="metric-label">cobertura LATAM: BR, CL, AR, CO, MX, PE</div></div>
+        <div class="metric-card"><div class="metric-num">60k</div><div class="metric-label" data-i18n="aie.m1">empresas validadas no CRM Brasil em ~5 dias (antes: pesquisa e validação manual, uma a uma)</div></div>
+        <div class="metric-card"><div class="metric-num">5k+</div><div class="metric-label" data-i18n="aie.m2">CNPJs inativos identificados na Receita Federal, além de inconsistências cadastrais relevantes</div></div>
+        <div class="metric-card"><div class="metric-num">800k</div><div class="metric-label" data-i18n="aie.m3">empresas analisadas para expansão comercial</div></div>
+        <div class="metric-card"><div class="metric-num" data-i18n="aie.m4n">6 países</div><div class="metric-label" data-i18n="aie.m4">cobertura LATAM: BR, AR, CL, CO, PE, EC</div></div>
       </div>
     </div>
 
     <!-- SCREENSHOTS DAS SOLUÇÕES -->
     <div class="screenshots-section fade-in">
-      <div class="screenshots-label">Soluções criadas</div>
+      <div class="screenshots-label" data-i18n="ss.label">Soluções criadas</div>
 
       <div class="proj-screenshots">
-        <div class="proj-screenshots-title">Dashboard de KPIs — Liderança & Geração de Demanda</div>
-        <div class="proj-screenshots-desc">Dashboard construído para lideranças de diversas áreas acompanharem KPIs, análise de campanhas e geração de demanda em tempo real.</div>
+        <div class="proj-screenshots-title" data-i18n="ss1.title">Dashboard de KPIs — Liderança & Geração de Demanda</div>
+        <div class="proj-screenshots-desc" data-i18n="ss1.desc">Dashboard construído para lideranças de diversas áreas acompanharem KPIs, análise de campanhas e geração de demanda em tempo real.</div>
         <div class="proj-screenshots-grid layout-3">
           <div class="ss-frame ratio-wide">
             <img src="assets/14.png" alt="Dashboard KPIs" onerror="this.style.display='none'" />
             <div class="ph"><div class="ph-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 9h6M9 12h6M9 15h4"/></svg></div><span>assets/14.png</span></div>
           </div>
           <div class="ss-frame ratio-wide">
-            <img src="assets/15.png" alt="Dashboard campanhas" onerror="this.style.display='none'" />
+            <img src="assets/15.png" alt="Dashboard" onerror="this.style.display='none'" />
             <div class="ph"><div class="ph-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 9h6M9 12h6M9 15h4"/></svg></div><span>assets/15.png</span></div>
           </div>
           <div class="ss-frame ratio-wide">
-            <img src="assets/16.png" alt="Dashboard geração de demanda" onerror="this.style.display='none'" />
+            <img src="assets/16.png" alt="Dashboard" onerror="this.style.display='none'" />
             <div class="ph"><div class="ph-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 9h6M9 12h6M9 15h4"/></svg></div><span>assets/16.png</span></div>
           </div>
         </div>
       </div>
 
       <div class="proj-screenshots">
-        <div class="proj-screenshots-title">API Brasil — Receita Federal & CNPJ JÁ</div>
-        <div class="proj-screenshots-desc">Automação que validou 60k empresas em ~5 dias integrando APIs governamentais do Brasil.</div>
+        <div class="proj-screenshots-title" data-i18n="ss2.title">API Brasil — Receita Federal & CNPJ</div>
+        <div class="proj-screenshots-desc" data-i18n="ss2.desc">Automação que validou ~60 mil empresas do CRM Brasil em cerca de 5 dias, integrando dados de CNPJ da Receita Federal.</div>
         <div class="proj-screenshots-grid layout-3">
           <div class="ss-frame ratio-wide">
-            <img src="assets/17.png" alt="API Brasil 1" onerror="this.style.display='none'" />
+            <img src="assets/17.png" alt="API Brasil" onerror="this.style.display='none'" />
             <div class="ph"><div class="ph-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 9h6M9 12h6M9 15h4"/></svg></div><span>assets/17.png</span></div>
           </div>
           <div class="ss-frame ratio-wide">
-            <img src="assets/18.png" alt="API Brasil 2" onerror="this.style.display='none'" />
+            <img src="assets/18.png" alt="API Brasil" onerror="this.style.display='none'" />
             <div class="ph"><div class="ph-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 9h6M9 12h6M9 15h4"/></svg></div><span>assets/18.png</span></div>
           </div>
           <div class="ss-frame ratio-wide">
-            <img src="assets/19.png" alt="API Brasil 3" onerror="this.style.display='none'" />
+            <img src="assets/19.png" alt="API Brasil" onerror="this.style.display='none'" />
             <div class="ph"><div class="ph-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 9h6M9 12h6M9 15h4"/></svg></div><span>assets/19.png</span></div>
           </div>
         </div>
       </div>
 
       <div class="proj-screenshots">
-        <div class="proj-screenshots-title">APIs América Latina — Chile, Argentina, Peru, Colômbia, México</div>
-        <div class="proj-screenshots-desc">Integração com APIs governamentais de cada país: SII Chile, AFIP Argentina, SUNAT Peru, RUES Colômbia e SAT México. Junto com o Brasil, cobertura completa de 6 países LATAM.</div>
+        <div class="proj-screenshots-title" data-i18n="ss3.title">APIs América Latina — Chile, Peru, Colômbia, México e Argentina</div>
+        <div class="proj-screenshots-desc" data-i18n="ss3.desc">Interfaces de consulta por país, integradas a registros oficiais de empresas: SII (Chile), SUNAT (Peru), Câmara de Comércio e Datos Abiertos (Colômbia), SIEM/DENUE/SAT (México) e ARCA/AFIP e BCRA (Argentina).</div>
         <div class="proj-screenshots-grid layout-3">
           <div class="ss-frame ratio-wide">
             <img src="assets/41.png" alt="API Chile" onerror="this.style.display='none'" />
             <div class="ph"><div class="ph-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 9h6M9 12h6M9 15h4"/></svg></div><span>Chile · assets/41.png</span></div>
           </div>
           <div class="ss-frame ratio-wide">
-            <img src="assets/42.png" alt="API Argentina" onerror="this.style.display='none'" />
-            <div class="ph"><div class="ph-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 9h6M9 12h6M9 15h4"/></svg></div><span>Argentina · assets/42.png</span></div>
+            <img src="assets/42.png" alt="API Peru" onerror="this.style.display='none'" />
+            <div class="ph"><div class="ph-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 9h6M9 12h6M9 15h4"/></svg></div><span>Peru · assets/42.png</span></div>
           </div>
           <div class="ss-frame ratio-wide">
-            <img src="assets/43.png" alt="API Peru" onerror="this.style.display='none'" />
-            <div class="ph"><div class="ph-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 9h6M9 12h6M9 15h4"/></svg></div><span>Peru · assets/43.png</span></div>
+            <img src="assets/43.png" alt="API Colombia" onerror="this.style.display='none'" />
+            <div class="ph"><div class="ph-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 9h6M9 12h6M9 15h4"/></svg></div><span>Colombia · assets/43.png</span></div>
           </div>
           <div class="ss-frame ratio-wide">
-            <img src="assets/44.png" alt="API Colômbia" onerror="this.style.display='none'" />
-            <div class="ph"><div class="ph-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 9h6M9 12h6M9 15h4"/></svg></div><span>Colômbia · assets/44.png</span></div>
+            <img src="assets/44.png" alt="API México" onerror="this.style.display='none'" />
+            <div class="ph"><div class="ph-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 9h6M9 12h6M9 15h4"/></svg></div><span>México · assets/44.png</span></div>
           </div>
           <div class="ss-frame ratio-wide">
-            <img src="assets/45.png" alt="API México" onerror="this.style.display='none'" />
-            <div class="ph"><div class="ph-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 9h6M9 12h6M9 15h4"/></svg></div><span>México · assets/45.png</span></div>
+            <img src="assets/45.png" alt="API Argentina" onerror="this.style.display='none'" />
+            <div class="ph"><div class="ph-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 9h6M9 12h6M9 15h4"/></svg></div><span>Argentina · assets/45.png</span></div>
           </div>
         </div>
       </div>
 
       <div class="proj-screenshots">
-        <div class="proj-screenshots-title">Soluções Extras — Agente IA, Centralização de Ferramentas & Email Validator</div>
-        <div class="proj-screenshots-desc">Agente de IA para automação de processos, hub centralizando todas as ferramentas da área e validador de e-mails em escala.</div>
+        <div class="proj-screenshots-title" data-i18n="ss4.title">Soluções Extras — Agente de IA, Centralização de Ferramentas & Email Validator</div>
+        <div class="proj-screenshots-desc" data-i18n="ss4.desc">Agente de IA conversacional com arquitetura supervisor (LangChain, LangGraph, SAP Cloud SDK for AI, SAP AI Core) que unifica as APIs dos países em uma única interface e roteia cada consulta automaticamente para o país e a lógica certos; hub que centraliza as ferramentas da área; e validador de e-mails em escala — tudo em SAP UI5/Fiori sobre SAP BTP, seguindo os padrões de UX da SAP.</div>
         <div class="proj-screenshots-grid layout-3">
           <div class="ss-frame ratio-wide">
-            <img src="assets/21.png" alt="Agente IA" onerror="this.style.display='none'" />
-            <div class="ph"><div class="ph-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 9h6M9 12h6M9 15h4"/></svg></div><span>Agente IA · assets/21.png</span></div>
+            <img src="assets/21.png" alt="Company Intelligence AI Agent" onerror="this.style.display='none'" />
+            <div class="ph"><div class="ph-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 9h6M9 12h6M9 15h4"/></svg></div><span>AI Agent · assets/21.png</span></div>
           </div>
           <div class="ss-frame ratio-wide">
-            <img src="assets/22.png" alt="Centralização ferramentas" onerror="this.style.display='none'" />
-            <div class="ph"><div class="ph-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 9h6M9 12h6M9 15h4"/></svg></div><span>Centralização · assets/22.png</span></div>
+            <img src="assets/22.png" alt="Internal Tools & API Directory" onerror="this.style.display='none'" />
+            <div class="ph"><div class="ph-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 9h6M9 12h6M9 15h4"/></svg></div><span>Digital Hub · assets/22.png</span></div>
           </div>
           <div class="ss-frame ratio-wide">
             <img src="assets/23.png" alt="Email Validator" onerror="this.style.display='none'" />
@@ -786,26 +843,53 @@
 
     </div><!-- /screenshots-section -->
 
+    <!-- INFOSYS -->
+    <div class="feature-card fade-in">
+      <div>
+        <span class="eyebrow" data-i18n="inf.eyebrow">Projeto atual · Infosys</span>
+        <h3 data-i18n="inf.title">Plataforma de workflows de agentes de IA — AMS</h3>
+        <p data-i18n="inf.p1">Em um projeto de AMS (Application Management Services), construí uma plataforma de workflows de agentes de IA que apoia o time de suporte no tratamento de tickets de incidentes, problemas e tarefas.</p>
+        <p data-i18n="inf.p2">Construí a camada de fluxo de dados — ingestão, limpeza, ETL e gestão de metadados, na linha de ferramentas como o OpenMetadata — e implementei um workflow builder em que os próprios usuários desenham seus fluxos de agentes, conectando bancos de dados, APIs e outras fontes, com modelos OpenAI consumidos via Azure OpenAI Service. Fui responsável pela arquitetura ponta a ponta da solução e pelo design do banco de dados.</p>
+        <div class="tag-row">
+          <span class="tag">Azure OpenAI</span>
+          <span class="tag" data-i18n="inf.tag1">Workflows multiagente</span>
+          <span class="tag">LLMs</span>
+          <span class="tag">ETL</span>
+          <span class="tag">OpenMetadata</span>
+          <span class="tag">Python</span>
+          <span class="tag">Claude</span>
+          <span class="tag">Codex</span>
+          <span class="tag">GitHub Copilot</span>
+        </div>
+      </div>
+      <div class="metrics-col">
+        <div class="metric-card"><div class="metric-num">3</div><div class="metric-label" data-i18n="inf.m1">tipos de ticket apoiados por agentes: incidentes, problemas e tarefas</div></div>
+        <div class="metric-card"><div class="metric-num">E2E</div><div class="metric-label" data-i18n="inf.m2">arquitetura da solução e design do banco de dados sob minha responsabilidade</div></div>
+        <div class="metric-card"><div class="metric-num">ETL</div><div class="metric-label" data-i18n="inf.m3">camada de dados: ingestão, limpeza, ETL e gestão de metadados</div></div>
+        <div class="metric-card"><div class="metric-num">No-code</div><div class="metric-label" data-i18n="inf.m4">workflow builder para usuários desenharem seus próprios fluxos de agentes</div></div>
+      </div>
+    </div>
+
     <div class="impact-grid fade-in">
       <div class="impact-card">
         <div class="impact-big">100<span class="unit">×</span></div>
-        <div class="impact-lbl">Velocidade de processamento</div>
-        <div class="impact-desc">Validação que levaria meses passou a ser executada em dias com automação via Python e APIs governamentais.</div>
+        <div class="impact-lbl" data-i18n="ic1.lbl">Velocidade de processamento</div>
+        <div class="impact-desc" data-i18n="ic1.desc">Validação que levaria meses passou a ser executada em dias com automação via Python e APIs governamentais.</div>
       </div>
       <div class="impact-card">
         <div class="impact-big">6</div>
-        <div class="impact-lbl">Países integrados</div>
-        <div class="impact-desc">APIs governamentais integradas para Brasil, Chile, Argentina, Colômbia, México e Peru — cobertura regional completa.</div>
+        <div class="impact-lbl" data-i18n="ic2.lbl">Países integrados</div>
+        <div class="impact-desc" data-i18n="ic2.desc">Integrações dedicadas para Brasil, Argentina, Chile, Colômbia, Peru e Equador — unificadas por um agente de IA em uma única interface.</div>
       </div>
       <div class="impact-card">
         <div class="impact-big">VP</div>
-        <div class="impact-lbl">Visibilidade executiva</div>
-        <div class="impact-desc">Soluções apresentadas para lideranças executivas incluindo a Vice-Presidência da SAP Brasil.</div>
+        <div class="impact-lbl" data-i18n="ic3.lbl">Visibilidade executiva</div>
+        <div class="impact-desc" data-i18n="ic3.desc">Apresentei o trabalho e seus resultados à liderança executiva, incluindo a Vice-Presidência da SAP Brasil — com impacto em produtividade, confiabilidade do CRM e escalabilidade.</div>
       </div>
       <div class="impact-card">
         <div class="impact-big">+</div>
-        <div class="impact-lbl">Mudança de escopo da área</div>
-        <div class="impact-desc">O impacto foi tão profundo que o time deixou de executar tarefas manuais para atuar de forma estratégica.</div>
+        <div class="impact-lbl" data-i18n="ic4.lbl">Mudança de escopo da área</div>
+        <div class="impact-desc" data-i18n="ic4.desc">O impacto foi tão profundo que o time deixou de executar tarefas manuais para atuar de forma estratégica.</div>
       </div>
     </div>
   </div>
@@ -817,54 +901,83 @@
 <section id="projects">
   <div class="container">
     <div class="fade-in">
-      <span class="eyebrow">Projetos & Premiações</span>
-      <h2 class="section-title">Construindo.<br/>Competindo. Vencendo.</h2>
-      <p class="section-intro">Hackathons, projetos acadêmicos e iniciativas que mostram que meu aprendizado vai muito além da sala de aula.</p>
+      <span class="eyebrow" data-i18n="proj.eyebrow">Projetos & Premiações</span>
+      <h2 class="section-title" data-i18n="proj.title">Construindo.<br/>Competindo. Vencendo.</h2>
+      <p class="section-intro" data-i18n="proj.intro">Três hackathons vencidos com prazos curtos e alta pressão, em que enquadrar o problema rápido e testar hipóteses depressa foi decisivo — além de reconhecimentos na SAP e projetos acadêmicos que vão muito além da sala de aula.</p>
     </div>
 
+    <div class="group-label fade-in" data-i18n="proj.sapLabel">Reconhecimentos na SAP</div>
+    <div class="awards-grid fade-in">
+      <div class="award-card text-only">
+        <div class="award-body">
+          <div class="award-place" data-i18n="aw5.place">1º Lugar · Inovação</div>
+          <div class="award-title">BRAVO LAC — SAP</div>
+          <div class="award-evt">Data Factory for Demand Generation</div>
+          <div class="award-desc" data-i18n="aw5.desc">Concebi, desenhei e liderei a execução, junto com o time de Data Intelligence, do projeto vencedor entre mais de 65 cases apresentados em toda a América Latina — usando IA para tornar a geração de demanda mais inteligente, escalável e eficiente.</div>
+        </div>
+      </div>
+      <div class="award-card text-only">
+        <div class="award-body">
+          <div class="award-place">Innovation Driver</div>
+          <div class="award-title" data-i18n="aw6.title">Reconhecimento SAP LATAM</div>
+          <div class="award-evt" data-i18n="aw6.evt">Regional · América Latina</div>
+          <div class="award-desc" data-i18n="aw6.desc">Reconhecimento regional por soluções inovadoras de dados e IA aplicadas a Customer Data Intelligence.</div>
+        </div>
+      </div>
+      <div class="award-card text-only">
+        <div class="award-body">
+          <div class="award-place">“Appreciates”</div>
+          <div class="award-title" data-i18n="aw7.title">Reconhecimentos internos SAP</div>
+          <div class="award-evt" data-i18n="aw7.evt">Múltiplos reconhecimentos</div>
+          <div class="award-desc" data-i18n="aw7.desc">Recebi diversos “Appreciates” pela construção de soluções de dados e automação de alto impacto, tornando-me referência em iniciativas de account intelligence.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="group-label fade-in" data-i18n="proj.hackLabel">Hackathons & Prêmios acadêmicos</div>
     <div class="awards-grid fade-in">
       <div class="award-card">
         <div class="award-img">
-          <img src="assets/24.png" alt="Hackathon Databricks FactSet" onerror="this.style.display='none'" />
+          <img src="assets/24.png" alt="Hackathon Databricks × FactSet" onerror="this.style.display='none'" />
           <div class="ph"><div class="ph-icon"><svg viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 7h8M8 11h8M8 15h5"/></svg></div><span>assets/24.png</span></div>
         </div>
         <div class="award-img-badge">
-          <img src="assets/46.jpeg" alt="Hackathon Databricks FactSet 2" onerror="this.style.display='none'" />
+          <img src="assets/46.jpeg" alt="Hackathon Databricks × FactSet" onerror="this.style.display='none'" />
           <div class="ph"><div class="ph-icon"><svg viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 7h8M8 11h8M8 15h5"/></svg></div><span>assets/46.jpeg</span></div>
         </div>
         <div class="award-body">
-          <div class="award-place">1º Regional · 3º Nacional</div>
+          <div class="award-place" data-i18n="aw.regnat">1º Regional · 3º Nacional</div>
           <div class="award-title">Hackathon IBMEC Tech — Databricks × FactSet</div>
           <div class="award-evt">2026</div>
-          <div class="award-desc">Machine Learning, PCA, LDA, K-Means e séries temporais aplicados à identificação de mudanças de regime em indicadores econômicos.</div>
+          <div class="award-desc" data-i18n="aw1.desc">Machine Learning, séries temporais e análise econômica para identificar mudanças de regime em indicadores de mercado (crise, recuperação e estabilidade), com PCA, LDA e K-Means para extração de padrões, redução de dimensionalidade e segmentação de cenários.</div>
         </div>
       </div>
       <div class="award-card">
         <div class="award-img">
-          <img src="assets/25.jpeg" alt="Hackathon Dermage" onerror="this.style.display='none'" />
+          <img src="assets/25.jpeg" alt="Hackathon IBMEC × Dermage" onerror="this.style.display='none'" />
           <div class="ph"><div class="ph-icon"><svg viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 7h8M8 11h8M8 15h5"/></svg></div><span>assets/25.jpeg</span></div>
         </div>
         <div class="award-body">
-          <div class="award-place">1º Regional · 3º Nacional</div>
+          <div class="award-place" data-i18n="aw.regnat">1º Regional · 3º Nacional</div>
           <div class="award-title">Hackathon IBMEC × Dermage</div>
           <div class="award-evt">2026</div>
-          <div class="award-desc">Análise de dados corporativos, segmentação e geração de insights estratégicos orientados por dados.</div>
+          <div class="award-desc" data-i18n="aw2.desc">Análise de dados corporativos em parceria com a Dermage: análises exploratórias, segmentações, identificação de padrões e recomendações orientadas por dados para apoiar a tomada de decisão.</div>
         </div>
       </div>
       <div class="award-card">
         <div class="award-img">
-          <img src="assets/26.jpeg" alt="Hackathon App Financeiro" onerror="this.style.display='none'" />
+          <img src="assets/26.jpeg" alt="Hackathon IBMEC Tech — App" onerror="this.style.display='none'" />
           <div class="ph"><div class="ph-icon"><svg viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 7h8M8 11h8M8 15h5"/></svg></div><span>assets/26.jpeg</span></div>
         </div>
         <div class="award-img-badge">
-          <img src="assets/47.jpeg" alt="Hackathon App Financeiro 2" onerror="this.style.display='none'" />
+          <img src="assets/47.jpeg" alt="Hackathon IBMEC Tech — App" onerror="this.style.display='none'" />
           <div class="ph"><div class="ph-icon"><svg viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 7h8M8 11h8M8 15h5"/></svg></div><span>assets/47.jpeg</span></div>
         </div>
         <div class="award-body">
-          <div class="award-place">1º Regional</div>
-          <div class="award-title">Hackathon IBMEC Tech — App Financeiro</div>
+          <div class="award-place" data-i18n="aw3.place">1º Regional</div>
+          <div class="award-title" data-i18n="aw3.title">Hackathon IBMEC Tech — App Financeiro</div>
           <div class="award-evt">2025</div>
-          <div class="award-desc">Desenvolvimento de aplicativo de gestão financeira com IA, Java e React.</div>
+          <div class="award-desc" data-i18n="aw3.desc">Desenvolvimento de aplicativo de gestão financeira pessoal com IA, Java e React.</div>
         </div>
       </div>
       <div class="award-card">
@@ -879,8 +992,8 @@
         <div class="award-body">
           <div class="award-place">IBMEC Star</div>
           <div class="award-title">Academic Excellence Award</div>
-          <div class="award-evt">2024 · IBMEC SP</div>
-          <div class="award-desc">Primeira mulher do curso de Ciência de Dados e Inteligência Artificial a conquistar o prêmio de excelência acadêmica.</div>
+          <div class="award-evt">2024 · 2026.1 · IBMEC SP</div>
+          <div class="award-desc" data-i18n="aw4.desc">Prêmio de excelência acadêmica recebido duas vezes. Em 2024, fui a primeira mulher do curso de Ciência de Dados e Inteligência Artificial a conquistá-lo.</div>
         </div>
       </div>
     </div>
@@ -888,25 +1001,25 @@
     <div class="projects-grid fade-in">
       <div class="project-card">
         <div class="project-img">
-          <img src="assets/28.png" alt="Projeto Kyra" onerror="this.style.display='none'" />
+          <img src="assets/28.png" alt="Kyra" onerror="this.style.display='none'" />
           <div class="ph"><div class="ph-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 9h6M9 12h6M9 15h4"/></svg></div><span>assets/28.png</span></div>
         </div>
         <div class="project-body">
-          <div class="project-num">Projeto · IBMEC SP</div>
-          <div class="project-title">Projeto Kyra — ML & NLP</div>
-          <div class="project-desc">Apliquei Machine Learning e Processamento de Linguagem Natural a problemas empresariais reais — modelos preditivos, classificação e análise textual.</div>
+          <div class="project-num" data-i18n="pj.num">Projeto · IBMEC SP</div>
+          <div class="project-title" data-i18n="pj1.title">Projeto Kyra — ML & NLP</div>
+          <div class="project-desc" data-i18n="pj1.desc">Projetos de Machine Learning e Processamento de Linguagem Natural para a empresa Kyra — experimentos com modelos preditivos, classificação, segmentação e análise de texto.</div>
           <div class="project-tech"><span>Python</span><span>Scikit-learn</span><span>NLP</span><span>ML</span></div>
         </div>
       </div>
       <div class="project-card">
         <div class="project-img">
-          <img src="assets/29.jpeg" alt="Dashboard Power BI" onerror="this.style.display='none'" />
+          <img src="assets/29.jpeg" alt="Power BI" onerror="this.style.display='none'" />
           <div class="ph"><div class="ph-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 9h6M9 12h6M9 15h4"/></svg></div><span>assets/29.jpeg</span></div>
         </div>
         <div class="project-body">
-          <div class="project-num">Projeto · IBMEC SP</div>
-          <div class="project-title">Dashboards Executivos — Power BI</div>
-          <div class="project-desc">Desenvolvi dashboards interativos com DAX, Power Query, modelagem relacional e KPIs de negócio.</div>
+          <div class="project-num" data-i18n="pj.num">Projeto · IBMEC SP</div>
+          <div class="project-title" data-i18n="pj2.title">Dashboards Executivos — Power BI</div>
+          <div class="project-desc" data-i18n="pj2.desc">Desenvolvi dashboards interativos com DAX, Power Query, modelagem relacional e KPIs de negócio.</div>
           <div class="project-tech"><span>Power BI</span><span>DAX</span><span>Power Query</span><span>SQL</span></div>
         </div>
       </div>
@@ -916,9 +1029,9 @@
           <div class="ph"><div class="ph-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 9h6M9 12h6M9 15h4"/></svg></div><span>assets/30.jpeg</span></div>
         </div>
         <div class="project-body">
-          <div class="project-num">Projeto · IBMEC SP</div>
-          <div class="project-title">Aplicações Web Full-Stack</div>
-          <div class="project-desc">Desenvolvi aplicações web e back-end com Flask, Spring Boot e integração com banco de dados relacional e cloud Azure.</div>
+          <div class="project-num" data-i18n="pj.num">Projeto · IBMEC SP</div>
+          <div class="project-title" data-i18n="pj3.title">Aplicações Web Full-Stack</div>
+          <div class="project-desc" data-i18n="pj3.desc">Desenvolvi aplicações web e back-end com Flask, Spring Boot e integração com banco de dados relacional e cloud Azure.</div>
           <div class="project-tech"><span>Flask</span><span>Spring Boot</span><span>Java</span><span>Azure</span></div>
         </div>
       </div>
@@ -929,20 +1042,32 @@
 <div class="divider"></div>
 
 <!-- CERTIFICATIONS -->
-<section class="certs-section">
+<section id="certs" class="certs-section">
   <div class="container">
     <div class="fade-in">
-      <span class="eyebrow">Certificações</span>
-      <h2 class="section-title">Formação<br/>contínua.</h2>
-      <p class="section-intro">Uma trilha de aprendizado que construí em dados, IA, cloud e negócios.</p>
+      <span class="eyebrow" data-i18n="cert.eyebrow">Certificações & Formação</span>
+      <h2 class="section-title" data-i18n="cert.title">Formação<br/>contínua.</h2>
+      <p class="section-intro" data-i18n="cert.intro">Certificações em IA e uma trilha de aprendizado contínuo em dados, IA, cloud e negócios — na SAP, na Infosys e por conta própria.</p>
     </div>
+
+    <div class="group-label fade-in" data-i18n="cert.label1">Certificações</div>
+    <div class="certs-grid fade-in">
+      <div class="cert-card">
+        <div class="cert-body"><div class="cert-icon"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div><div><div class="cert-name">Claude Certified Developer – Foundations (CCDV-F)</div><div class="cert-org">Anthropic</div></div></div>
+      </div>
+      <div class="cert-card">
+        <div class="cert-body"><div class="cert-icon"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div><div><div class="cert-name">Claude Certified Associate – Foundations</div><div class="cert-org">Anthropic</div></div></div>
+      </div>
+    </div>
+
+    <div class="group-label fade-in" data-i18n="cert.label2">SAP Learning & Databricks</div>
     <div class="certs-grid fade-in">
       <div class="cert-card">
         <div class="cert-img">
-          <img src="assets/34.png" alt="SAP Business Data Cloud" onerror="this.style.display='none'" />
+          <img src="assets/34.png" alt="Positioning SAP Business Data Cloud" onerror="this.style.display='none'" />
           <div class="ph"><div class="ph-icon"><svg viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 7h8M8 11h8M8 15h5"/></svg></div><span>assets/34.png</span></div>
         </div>
-        <div class="cert-body"><div class="cert-icon"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div><div><div class="cert-name">SAP Business Data Cloud</div><div class="cert-org">SAP</div></div></div>
+        <div class="cert-body"><div class="cert-icon"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div><div><div class="cert-name">Positioning SAP Business Data Cloud</div><div class="cert-org" data-i18n="cert.bdc">SAP · SAP Datasphere, SAP Analytics Cloud e SAP Databricks</div></div></div>
       </div>
       <div class="cert-card">
         <div class="cert-img">
@@ -953,10 +1078,35 @@
       </div>
       <div class="cert-card">
         <div class="cert-img">
-          <img src="assets/36.png" alt="AI Models SAP HANA" onerror="this.style.display='none'" />
+          <img src="assets/36.png" alt="Developing AI Models with the Python Machine Learning Client for SAP HANA" onerror="this.style.display='none'" />
           <div class="ph"><div class="ph-icon"><svg viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 7h8M8 11h8M8 15h5"/></svg></div><span>assets/36.png</span></div>
         </div>
-        <div class="cert-body"><div class="cert-icon"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div><div><div class="cert-name">AI Models with the Python Machine Learning Client for SAP HANA</div><div class="cert-org">SAP</div></div></div>
+        <div class="cert-body"><div class="cert-icon"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div><div><div class="cert-name">Developing AI Models with the Python Machine Learning Client for SAP HANA</div><div class="cert-org" data-i18n="cert.hana">SAP · Machine Learning no SAP HANA com hana-ml, PAL e APL</div></div></div>
+      </div>
+      <div class="cert-card">
+        <div class="cert-body"><div class="cert-icon"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div><div><div class="cert-name">Navigating Large Language Models: Fundamentals and Techniques for Your Use Case</div><div class="cert-org" data-i18n="cert.llm">SAP · Estratégia de IA Generativa da SAP, RAG, fine-tuning e avaliação de LLMs</div></div></div>
+      </div>
+    </div>
+
+    <div class="group-label fade-in" data-i18n="cert.label3">Infosys · plataforma Lex</div>
+    <div class="certs-grid fade-in">
+      <div class="cert-card">
+        <div class="cert-body"><div class="cert-icon"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div><div><div class="cert-name">AI-Aware Learning Path</div><div class="cert-org">Infosys</div></div></div>
+      </div>
+      <div class="cert-card">
+        <div class="cert-body"><div class="cert-icon"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div><div><div class="cert-name">Prompt Engineering and Responsible AI for Developers</div><div class="cert-org">Infosys</div></div></div>
+      </div>
+      <div class="cert-card">
+        <div class="cert-body"><div class="cert-icon"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div><div><div class="cert-name">Introduction to LangChain</div><div class="cert-org">Infosys</div></div></div>
+      </div>
+      <div class="cert-card">
+        <div class="cert-body"><div class="cert-icon"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div><div><div class="cert-name">Agentic AI for Developers and Architects</div><div class="cert-org">Infosys</div></div></div>
+      </div>
+      <div class="cert-card">
+        <div class="cert-body"><div class="cert-icon"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div><div><div class="cert-name">Topaz Fabric Overview</div><div class="cert-org">Infosys</div></div></div>
+      </div>
+      <div class="cert-card">
+        <div class="cert-body"><div class="cert-icon"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div><div><div class="cert-name">Topaz Fabric – Studio and Run Time</div><div class="cert-org">Infosys</div></div></div>
       </div>
     </div>
   </div>
@@ -968,50 +1118,68 @@
 <section id="skills">
   <div class="container">
     <div class="fade-in">
-      <span class="eyebrow">Competências</span>
-      <h2 class="section-title">Stack que conecta<br/>análise, IA e negócio.</h2>
-      <p class="section-intro">Ferramentas e repertório que uso no dia a dia, organizados por camada, do dado bruto à decisão de negócio.</p>
+      <span class="eyebrow" data-i18n="sk.eyebrow">Competências</span>
+      <h2 class="section-title" data-i18n="sk.title">Stack que conecta<br/>análise, IA e negócio.</h2>
+      <p class="section-intro" data-i18n="sk.intro">Ferramentas e repertório que uso no dia a dia, organizados por camada, do dado bruto à decisão de negócio.</p>
     </div>
     <div class="skills-grid fade-in">
       <div class="skill-group">
-        <div class="skill-group-title">Programação & Dados</div>
+        <div class="skill-group-title" data-i18n="sk1.title">Programação, Dados & Automação</div>
         <div class="skill-tags">
-          <span class="stag hi">Python</span><span class="stag hi">SQL</span>
+          <span class="stag hi" data-i18n="sk.pyadv">Python avançado</span><span class="stag hi">SQL</span>
           <span class="stag">Pandas</span><span class="stag">NumPy</span><span class="stag">PySpark</span><span class="stag">ETL/ELT</span>
+          <span class="stag" data-i18n="sk.automation">Automação de processos</span><span class="stag" data-i18n="sk.cleansing">Limpeza e normalização de dados</span>
         </div>
       </div>
       <div class="skill-group">
-        <div class="skill-group-title">IA & Machine Learning</div>
+        <div class="skill-group-title" data-i18n="sk2.title">ML, NLP & IA Generativa</div>
         <div class="skill-tags">
-          <span class="stag hi">LangChain</span><span class="stag hi">IA Generativa</span>
-          <span class="stag">Scikit-learn</span><span class="stag">NLP</span><span class="stag">Clustering</span><span class="stag">Séries Temporais</span>
+          <span class="stag hi">LangChain</span><span class="stag hi">LangGraph</span><span class="stag hi" data-i18n="sk.agents">Agentes & workflows multiagente</span>
+          <span class="stag">Azure OpenAI</span><span class="stag">Claude</span><span class="stag">Infosys Topaz Fabric</span>
+          <span class="stag">Scikit-learn</span><span class="stag" data-i18n="sk.regression">Regressão</span><span class="stag" data-i18n="sk.classification">Classificação</span><span class="stag">Clustering</span><span class="stag" data-i18n="sk.segmentation">Segmentação</span><span class="stag" data-i18n="sk.predictive">Análise preditiva</span><span class="stag">NLP</span><span class="stag" data-i18n="sk.timeseries">Séries temporais</span>
         </div>
       </div>
       <div class="skill-group">
-        <div class="skill-group-title">Plataformas & Cloud</div>
+        <div class="skill-group-title" data-i18n="sk3.title">Plataformas de Dados, SAP & Cloud</div>
         <div class="skill-tags">
           <span class="stag hi">SAP BTP</span><span class="stag hi">SAP AI Core</span>
-          <span class="stag">Databricks</span><span class="stag">Azure</span><span class="stag">SAP Datasphere</span>
+          <span class="stag">Databricks</span><span class="stag">SAP Datasphere</span><span class="stag">SAP UI5/Fiori</span><span class="stag">Cloud Foundry</span><span class="stag">Azure</span>
         </div>
       </div>
       <div class="skill-group">
-        <div class="skill-group-title">APIs & Integração</div>
+        <div class="skill-group-title" data-i18n="sk4.title">APIs & Ingestão de Dados</div>
         <div class="skill-tags">
           <span class="stag hi">APIs REST</span><span class="stag hi">SOAP/Web Services</span>
-          <span class="stag">FastAPI</span><span class="stag">Web Scraping</span><span class="stag">Dados Abertos</span>
+          <span class="stag">FastAPI</span><span class="stag" data-i18n="sk.sources">Fontes públicas e privadas</span><span class="stag" data-i18n="sk.engines">Motores de consulta e enriquecimento</span><span class="stag">Web Scraping</span><span class="stag" data-i18n="sk.opendata">Dados Abertos</span>
         </div>
       </div>
       <div class="skill-group">
-        <div class="skill-group-title">Business Intelligence</div>
+        <div class="skill-group-title" data-i18n="sk5.title">Solution Advisory & Prototipagem</div>
         <div class="skill-tags">
-          <span class="stag hi">Power BI</span><span class="stag">DAX</span><span class="stag">Power Query</span><span class="stag">Excel Avançado</span>
+          <span class="stag hi" data-i18n="sk.vibe">Prototipagem rápida com IA (vibe coding)</span><span class="stag" data-i18n="sk.demos">Demos funcionais</span>
+          <span class="stag" data-i18n="sk.needs">Levantamento de necessidades de negócio</span><span class="stag" data-i18n="sk.value">Proposta de valor</span><span class="stag" data-i18n="sk.exec">Apresentações executivas</span>
         </div>
       </div>
       <div class="skill-group">
-        <div class="skill-group-title">Desenvolvimento</div>
+        <div class="skill-group-title" data-i18n="sk6.title">Business Intelligence & Visualização</div>
         <div class="skill-tags">
-          <span class="stag">Java</span><span class="stag">Spring Boot</span><span class="stag">Flask</span>
+          <span class="stag hi">Power BI</span><span class="stag">DAX</span><span class="stag">Power Query</span><span class="stag" data-i18n="sk.excel">Excel Avançado</span>
+          <span class="stag" data-i18n="sk.dash">Dashboards executivos</span><span class="stag" data-i18n="sk.kpis">KPIs & sales analytics</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-title" data-i18n="sk7.title">Desenvolvimento & Ferramentas</div>
+        <div class="skill-tags">
+          <span class="stag hi">Claude Code</span><span class="stag hi">Codex</span><span class="stag hi">GitHub Copilot</span>
+          <span class="stag">FastAPI</span><span class="stag">Flask</span><span class="stag">Java</span><span class="stag">Spring Boot</span>
           <span class="stag">React</span><span class="stag">Git/GitHub</span><span class="stag">HTML/CSS</span>
+          <span class="stag">Power Automate</span><span class="stag">Power Apps</span><span class="stag">Office Scripts</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-title" data-i18n="sk8.title">Idiomas</div>
+        <div class="skill-tags">
+          <span class="stag hi" data-i18n="sk.pt">Português — Nativo</span><span class="stag" data-i18n="sk.en">Inglês — Avançado</span><span class="stag" data-i18n="sk.es">Espanhol — Intermediário</span>
         </div>
       </div>
     </div>
@@ -1025,8 +1193,8 @@
   <div class="container">
     <div class="about-grid fade-in">
       <div>
-        <span class="eyebrow">Sobre</span>
-        <h2 class="section-title">A história não<br/>terminou aqui.</h2>
+        <span class="eyebrow" data-i18n="ab.eyebrow">Sobre</span>
+        <h2 class="section-title" data-i18n="ab.title">A história não<br/>terminou aqui.</h2>
         <div class="about-photos">
           <div class="about-pf about-pf-tall">
             <img src="assets/31.jpeg" alt="Juliane Oliveira" onerror="this.style.display='none'" />
@@ -1042,14 +1210,15 @@
           </div>
         </div>
         <div class="about-text">
-          <p>Sou estudante de <strong>Ciência de Dados e Inteligência Artificial no IBMEC SP</strong> (conclusão Jun/2027), atualmente intern na <strong>SAP como Customer Data Intelligence</strong>.</p>
-          <p>Antes da tecnologia, passei por advocacia e gestão de franquia. Essa trajetória me deu algo que nenhum curso ensina: <strong>a perspectiva de quem viu problemas reais e entendeu que tecnologia é meio, não fim.</strong></p>
-          <p>Fluente em <strong>Inglês</strong> (avançado) e comunicativa em <strong>Espanhol</strong> (intermediário). Foco atual: Engenharia de Dados, Produtos de IA e soluções escaláveis para problemas de negócio.</p>
+          <p data-i18n="ab.p1">Sou <strong>AI Engineer na Infosys (CoE Brasil)</strong>, com quase 2 anos de <strong>SAP em Customer Data Intelligence</strong>, e estudante de <strong>Ciência de Dados e Inteligência Artificial no IBMEC SP</strong> (curso noturno, conclusão em Jun/2027).</p>
+          <p data-i18n="ab.p2">Combino a construção prática de soluções de IA, dados e automação com visão de negócio: chego rápido ao núcleo de problemas complexos, transformo ideias em soluções funcionais e comunico seu valor para públicos técnicos e executivos.</p>
+          <p data-i18n="ab.p3">Antes da tecnologia, passei por advocacia e gestão de franquia. Essa trajetória me deu algo que nenhum curso ensina: <strong>a perspectiva de quem viu problemas reais e entendeu que tecnologia é meio, não fim.</strong></p>
+          <p data-i18n="ab.p4">Português nativo, <strong>Inglês</strong> avançado e <strong>Espanhol</strong> intermediário. Foco atual: IA aplicada, agentes e workflows multiagente, engenharia de dados e soluções escaláveis para problemas de negócio.</p>
         </div>
       </div>
       <div>
-        <span class="eyebrow">Contato</span>
-        <h2 class="section-title">Vamos<br/>conversar.</h2>
+        <span class="eyebrow" data-i18n="ct.eyebrow">Contato</span>
+        <h2 class="section-title" data-i18n="ct.title">Vamos<br/>conversar.</h2>
         <div class="contact-links">
           <a href="mailto:julianeoliveira005@gmail.com" class="contact-item">
             <div class="contact-icon-box"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 7 10-7"/></svg></div>
@@ -1061,11 +1230,11 @@
           </a>
           <div class="contact-item">
             <div class="contact-icon-box"><svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg></div>
-            <div><div class="contact-lbl">Localização</div><div class="contact-val">Granja Viana, Cotia / SP</div></div>
+            <div><div class="contact-lbl" data-i18n="ct.loc">Localização</div><div class="contact-val" data-i18n="ct.locval">Granja Viana, Cotia / SP</div></div>
           </div>
           <div class="contact-item">
             <div class="contact-icon-box"><svg viewBox="0 0 24 24"><path d="M6.6 10.8a15.05 15.05 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.6 1 1 0 0 1 1 1v3.5a1 1 0 0 1-1 1A17 17 0 0 1 3 5a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1 11.4 11.4 0 0 0 .6 3.6 1 1 0 0 1-.25 1z"/></svg></div>
-            <div><div class="contact-lbl">Telefone</div><div class="contact-val">(11) 99268-4820</div></div>
+            <div><div class="contact-lbl" data-i18n="ct.phone">Telefone</div><div class="contact-val" data-i18n="ct.phoneval">(11) 99268-4820</div></div>
           </div>
         </div>
       </div>
@@ -1075,20 +1244,22 @@
 
 <!-- FOOTER -->
 <footer>
-  <p>Juliane de Assis Pirozelli Oliveira &nbsp;·&nbsp; Ciência de Dados & IA &nbsp;·&nbsp; IBMEC SP &nbsp;·&nbsp; <strong>SAP</strong></p>
-  <p class="footer-sub">Dados, determinação e muito Python.</p>
+  <p data-i18n="ft.main">Juliane de Assis Pirozelli Oliveira &nbsp;·&nbsp; AI Engineer &nbsp;·&nbsp; Ciência de Dados & IA &nbsp;·&nbsp; IBMEC SP &nbsp;·&nbsp; <strong>Infosys</strong></p>
+  <p class="footer-sub" data-i18n="ft.sub">Dados, determinação e muito Python.</p>
 </footer>
 
 <!-- LIGHTBOX -->
 <div id="lightbox" onclick="closeLightbox()">
-  <button type="button" id="lightbox-close" onclick="closeLightbox()" aria-label="Fechar">✕</button>
+  <button type="button" id="lightbox-close" onclick="closeLightbox()" aria-label="Fechar" data-i18n-aria="aria.close">✕</button>
   <img id="lightbox-img" src="" alt="" onclick="event.stopPropagation()" />
 </div>
 
 <!-- BACK TO TOP -->
-<button type="button" id="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Voltar ao início">
+<button type="button" id="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Voltar ao início" data-i18n-aria="aria.top">
   <svg viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
 </button>
+
+<script src="i18n.js"></script>
 
 <script>
   // ── FLOWER LOADER ──
